@@ -13,40 +13,40 @@ public class ValueModel implements StateValueModel
 
     protected StateValueChangeSupport listeners;
 
-    public ValueModel( ValueFunction valueFunction )
+    public ValueModel (ValueFunction valueFunction)
     {
-       this.valueFunction = valueFunction;
-       listeners = new StateValueChangeSupport();
+        this.valueFunction = valueFunction;
+        listeners = new StateValueChangeSupport();
     }
 
-    public void addListener(StateValueChangeListener listener)
+    @Override
+    public void addListener (StateValueChangeListener listener)
     {
-        listeners.addListener( listener );
+        listeners.addListener(listener);
     }
 
-    public void removeListener(StateValueChangeListener listener)
+    @Override
+    public void removeListener (StateValueChangeListener listener)
     {
-       listeners.removeListener( listener );
+        listeners.removeListener(listener);
     }
 
-    public void reset()
+    @Override
+    public void reset ()
     {
         valueFunction.reset();
     }
 
-    public double getValue(State s)
+    @Override
+    public double getValue (State s)
     {
         return valueFunction.getValue(s);
     }
 
-    public void update(State state, double deltaValue)
+    @Override
+    public void update (State state, double deltaValue)
     {
         valueFunction.update(state, deltaValue);
-
-        StateValueChangeEvent event =
-            new StateValueChangeEvent( valueFunction, state, deltaValue );
-
-        listeners.fireEvent( event );
-
+        listeners.fireEvent(new StateValueChangeEvent(valueFunction, state, deltaValue));
     }
 }

@@ -47,23 +47,24 @@ public class Layer implements Processor
    {
       this( neurons, new Sigmoid() );
    }
-   
+
    public Layer( Neuron[] neurons, Function thresholdFunction )
    {
       this.function = thresholdFunction;
-      
+
       this.neurons = neurons;
-      
+
       int inputCount = neurons[0].getWeightCount();
 
       // create arrays to store the most recent inputs and
       // outputs for this network
       inputs = new double[inputCount];
       outputs = new double[ neurons.length ];
-            
+
    }
 
-   public double[] process( double[] inputValues )
+   @Override
+public double[] process( double[] inputValues )
    {
       // save copy of input values
       ArrayUtils.copyInto( inputValues, inputs );
