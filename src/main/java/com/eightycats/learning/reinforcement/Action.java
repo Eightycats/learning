@@ -5,16 +5,19 @@ package com.eightycats.learning.reinforcement;
  */
 public interface Action
 {
-    public State perform( State currentState );
+    /**
+     * Performs this action from the given State and returns the new State.
+     */
+    public State perform (State currentState);
 
     /**
      * Peeks at the next State if this action is performed.
      */
-    public State getNextState( State currentState );
+    public State getNextState (State currentState);
 
     @Override
-    public boolean equals( Object object );
+    public boolean equals (Object object);
 
     @Override
-    public String toString();
+    public String toString ();
 }

@@ -8,7 +8,7 @@ package com.eightycats.learning.reinforcement;
 public abstract class ActionEpisode extends EpisodeBase
 {
 
-   protected ActionValueFunction valueFunction;
+   protected ActionValueFunction _valueFunction;
 
    public ActionEpisode(State initialState,
                   Policy policy,
@@ -18,18 +18,18 @@ public abstract class ActionEpisode extends EpisodeBase
       
       super( initialState, policy, rewardFunction );
 
-      this.valueFunction = valueFunction;
+      this._valueFunction = valueFunction;
 
    }
 
    protected void setActionValueFunction(ActionValueFunction valueFunction)
    {
-      this.valueFunction = valueFunction;
+      this._valueFunction = valueFunction;
    }
 
    public ActionValueFunction getValueFunction()
    {
-      return valueFunction;
+      return _valueFunction;
    }
 
 }

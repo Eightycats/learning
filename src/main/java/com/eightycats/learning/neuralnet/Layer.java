@@ -12,191 +12,176 @@ import com.eightycats.litterbox.math.*;
  */
 public class Layer implements Processor
 {
-   private double[] inputs;
+    private double[] inputs;
 
-   private double[] outputs;
+    private double[] outputs;
 
-   private Neuron[] neurons;
+    private Neuron[] neurons;
 
-   private Function function;
+    private Function function;
 
-   public Layer( int inputCount, int neuronCount )
-   {
-      this( inputCount, neuronCount, new Sigmoid() );
-   }
+    public Layer (int inputCount, int neuronCount)
+    {
+        this(inputCount, neuronCount, new Sigmoid());
+    }
 
-   public Layer( int inputCount, int neuronCount, Function thresholdFunction )
-   {
+    public Layer (int inputCount, int neuronCount, Function thresholdFunction)
+    {
+        function = thresholdFunction;
 
-      function = thresholdFunction;
+        // create arrays to store the most recent inputs and
+        // outputs for this network
+        inputs = new double[inputCount];
+        outputs = new double[neuronCount];
 
-      // create arrays to store the most recent inputs and
-      // outputs for this network
-      inputs = new double[inputCount];
-      outputs = new double[neuronCount];
+        neurons = new Neuron[neuronCount];
+        for (int i = 0; i < neuronCount; i++) {
+            neurons[i] = new Neuron(inputCount);
+        }
+    }
 
-      neurons = new Neuron[neuronCount];
-      for( int i = 0; i < neuronCount; i++ )
-      {
-         neurons[i] = new Neuron(inputCount);
-      }
+    public Layer (Neuron[] neurons)
+    {
+        this(neurons, new Sigmoid());
+    }
 
-   }
+    public Layer (Neuron[] neurons, Function thresholdFunction)
+    {
+        this.function = thresholdFunction;
 
-   public Layer( Neuron[] neurons )
-   {
-      this( neurons, new Sigmoid() );
-   }
+        this.neurons = neurons;
 
-   public Layer( Neuron[] neurons, Function thresholdFunction )
-   {
-      this.function = thresholdFunction;
+        int inputCount = neurons[0].getWeightCount();
 
-      this.neurons = neurons;
+        // create arrays to store the most recent inputs and
+        // outputs for this network
+        inputs = new double[inputCount];
+        outputs = new double[neurons.length];
 
-      int inputCount = neurons[0].getWeightCount();
+    }
 
-      // create arrays to store the most recent inputs and
-      // outputs for this network
-      inputs = new double[inputCount];
-      outputs = new double[ neurons.length ];
+    @Override
+    public double[] process (double[] inputValues)
+    {
+        // save copy of input values
+        ArrayUtils.copyInto(inputValues, inputs);
 
-   }
+        for (int i = 0; i < neurons.length; i++) {
 
-   @Override
-public double[] process( double[] inputValues )
-   {
-      // save copy of input values
-      ArrayUtils.copyInto( inputValues, inputs );
+            // Get the weighted sum of the input values and
+            // run this stimulation through the squashing function.
+            // Set the result as the output values for the neuron
+            // at this index.
+            outputs[i] = neurons[i].process(inputs, function);
 
-      for( int i = 0; i < neurons.length; i++ )
-      {
+        }
 
-         // Get the weighted sum of the input values and
-         // run this stimulation through the squashing function.
-         // Set the result as the output values for the neuron
-         // at this index.
-         outputs[i] = neurons[i].process( inputs, function );
+        // return a copy of the outputs so that
+        // no one can mess with our internal output values
+        return ArrayUtils.copy(outputs);
 
-      }
+    }
 
-      // return a copy of the outputs so that
-      // no one can mess with our internal output values
-      return ArrayUtils.copy( outputs );
+    public void setFunction (Function newFunction)
+    {
+        function = newFunction;
+    }
 
-   }
+    public Function getFunction ()
+    {
+        return function;
+    }
 
-   public void setFunction( Function newFunction )
-   {
-      function = newFunction;
-   }
+    public int getNeuronCount ()
+    {
+        return neurons.length;
+    }
 
-   public Function getFunction()
-   {
-      return function;
-   }
+    public Neuron getNeuron (int neuronIndex)
+    {
+        return neurons[neuronIndex];
+    }
 
-   public int getNeuronCount()
-   {
-      return neurons.length;
-   }
+    public double getWeight (int neuronIndex, int inputIndex)
+    {
+        return neurons[neuronIndex].getWeight(inputIndex);
+    }
 
-   public Neuron getNeuron( int neuronIndex )
-   {
-      return neurons[ neuronIndex ];
-   }
+    public double[] backup (double[] errors, double learningRate)
+    {
+        return backup(errors, learningRate, 0);
+    }
 
-   public double getWeight( int neuronIndex, int inputIndex )
-   {
-      return neurons[neuronIndex].getWeight(inputIndex);
-   }
+    public double[] backup (double[] errors, double learningRate, double momentum)
+    {
 
-   public double[] backup( double[] errors,
-                           double learningRate )
-   {
-       return backup( errors, learningRate, 0 );
-   }
+        int neuronCount = getNeuronCount();
 
-    public double[] backup( double[] errors,
-                            double learningRate,
-                            double momentum )
-   {
+        double[] deltas = new double[neuronCount];
 
-       int neuronCount = getNeuronCount();
+        // calculate the errors for the upstream layer
+        double[] upstreamErrors = new double[inputs.length];
 
-       double[] deltas = new double[ neuronCount ];
+        for (int neuronIndex = 0; neuronIndex < neuronCount; neuronIndex++) {
 
-       // calculate the errors for the upstream layer
-       double[] upstreamErrors = new double[ inputs.length ];
+            // get the slope of the activation function
+            // at the point of the current output value
+            double outputSlope = 1;
 
-       for( int neuronIndex = 0; neuronIndex < neuronCount; neuronIndex++ )
-       {
+            if (function instanceof Derivable) {
+                Derivable derivableFunction = (Derivable) function;
+                Function derivative = derivableFunction.getDerivative();
+                outputSlope = derivative.apply(outputs[neuronIndex]);
+            }
 
-          // get the slope of the activation function
-          // at the point of the current output value
-          double outputSlope = 1;
+            // multiply the error value times the slope of the current output
+            deltas[neuronIndex] = errors[neuronIndex] * outputSlope;
 
-          if( function instanceof Derivable )
-          {
-              Derivable derivableFunction = (Derivable) function;
-              Function derivative = derivableFunction.getDerivative();
-              outputSlope = derivative.apply( outputs[neuronIndex] );
-          }
+            // for each input value
+            for (int inputIndex = 0; inputIndex < inputs.length; inputIndex++) {
 
-          // multiply the error value times the slope of the current output
-          deltas[neuronIndex] = errors[neuronIndex] * outputSlope;
+                // - get the weight for the current input to
+                // the current neuron
+                //
+                // - multiply the weight times the output
+                // error (aka delta) for the current neuron
+                //
+                double weightedError = getWeight(neuronIndex, inputIndex) * deltas[neuronIndex];
 
-          // for each input value
-          for( int inputIndex = 0; inputIndex < inputs.length; inputIndex++ )
-          {
+                // accumulate all of the weighted error values
+                // for the current input
+                upstreamErrors[inputIndex] += weightedError;
 
-             // - get the weight for the current input to
-             // the current neuron
-             //
-             // - multiply the weight times the output
-             //   error (aka delta) for the current neuron
-             //
-             double weightedError = getWeight(neuronIndex, inputIndex) *
-                                    deltas[neuronIndex];
+                // Adjust weights for the current layer
+                double weightChange = learningRate * deltas[neuronIndex] * inputs[inputIndex];
 
-             // accumulate all of the weighted error values
-             // for the current input
-             upstreamErrors[inputIndex] += weightedError;
+                // Add momentum (if any) to the weight adjustment.
+                // This is the last weight change times the momentum factor.
+                double momentumWeightChange = momentum
+                    * neurons[neuronIndex].getMomentum(inputIndex);
 
-             // Adjust weights for the current layer
-             double weightChange = learningRate *
-                                   deltas[neuronIndex] *
-                                   inputs[ inputIndex ];
+                weightChange += momentumWeightChange;
 
-             // Add momentum (if any) to the weight adjustment.
-             // This is the last weight change times the momentum factor.
-             double momentumWeightChange = momentum *
-                neurons[ neuronIndex ].getMomentum( inputIndex );
+                neurons[neuronIndex].adjustWeight(inputIndex, weightChange);
 
-             weightChange += momentumWeightChange;
+            }
 
-             neurons[ neuronIndex ].adjustWeight( inputIndex,
-                                                  weightChange );
+        }
 
-          }
+        return upstreamErrors;
 
-       }
+    }
 
-       return upstreamErrors;
+    public double[] getOutputs ()
+    {
+        return outputs;
+    }
 
-   }
-
-   public double[] getOutputs()
-   {
-       return outputs;
-   }
-
-   public void randomize()
-   {
-       for(int i = 0; i < neurons.length; i++)
-       {
-          neurons[i].randomize();
-       }
-   }
+    public void randomize ()
+    {
+        for (int i = 0; i < neurons.length; i++) {
+            neurons[i].randomize();
+        }
+    }
 
 }

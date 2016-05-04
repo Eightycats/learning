@@ -1,14 +1,9 @@
 package com.eightycats.learning.reinforcement;
 
 /**
- * The reward function is used to get the reward value for 
- * a state.
- * 
- *
+ * Gets the reward signal for a State.
  */
 public interface RewardFunction
 {
-
     public double getReward( State state );
-
 }

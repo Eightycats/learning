@@ -4,9 +4,7 @@ import com.eightycats.learning.reinforcement.Action;
 import com.eightycats.learning.reinforcement.State;
 
 /**
- *
- *
- *
+ * A State/Action pair used as a key for the value of that Action from the State.
  */
 public class StateActionPair
 {
@@ -14,54 +12,45 @@ public class StateActionPair
 
     private Action action;
 
-    public StateActionPair( State state, Action action )
+    public StateActionPair (State state, Action action)
     {
-       this.state = state;
-       this.action = action;
+        this.state = state;
+        this.action = action;
     }
 
-    public State getState()
+    public State getState ()
     {
         return state;
     }
 
-    public Action getAction()
+    public Action getAction ()
     {
         return action;
     }
 
-    public boolean equals( Object object )
+    @Override
+    public boolean equals (Object object)
     {
         boolean equals = false;
-
-        if( object instanceof StateActionPair )
-        {
+        if (object instanceof StateActionPair) {
             StateActionPair other = (StateActionPair) object;
-
-            equals = state.equals( other.state ) &&
-                     action.equals( other.action );
-
+            equals = state.equals(other.state) && action.equals(other.action);
         }
-
         return equals;
-
     }
 
     /**
-     * Used when this object is the key in 
-     * a hash table.
-     * 
-     * @see java.lang.Object#hashCode()
+     * Used when this object is the key in a hash table.
      */
-    public int hashCode()
+    @Override
+    public int hashCode ()
     {
-       return state.hashCode() + action.hashCode();
-    }
-    
-    
-    public String toString()
-    {
-        return "("+state.toString()+", "+action.toString()+")";
+        return state.hashCode() + action.hashCode();
     }
 
+    @Override
+    public String toString ()
+    {
+        return "(" + state.toString() + ", " + action.toString() + ")";
+    }
 }

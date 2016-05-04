@@ -4,34 +4,30 @@ import com.eightycats.learning.reinforcement.*;
 import java.util.*;
 
 /**
- *
- *
- *
+ * Fired off when the value function changes.
  */
 public class StateValueChangeEvent extends EventObject
 {
+    private static final long serialVersionUID = 1L;
 
-    private State state;
+    protected State _state;
 
-    private double value;
+    protected double _value;
 
-    public StateValueChangeEvent( ValueFunction source,
-                                  State state,
-                                  double value)
+    public StateValueChangeEvent (ValueFunction source, State state, double value)
     {
-        super( source );
-        this.state = state;
-        this.value = value;
+        super(source);
+        _state = state;
+        _value = value;
     }
 
-    public State getState()
+    public State getState ()
     {
-        return state;
+        return _state;
     }
 
-    public double getValue()
+    public double getValue ()
     {
-        return value;
+        return _value;
     }
-
 }

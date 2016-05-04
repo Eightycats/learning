@@ -4,61 +4,55 @@ import com.eightycats.litterbox.math.Range;
 import com.eightycats.learning.reinforcement.State;
 
 /**
- *
- *
+ * Base class for serializing states to values between 0.0 and 1.0.
  */
-public abstract class StateSerializerBase implements StateSerializer
+public abstract class StateSerializerBase
+    implements StateSerializer
 {
-   private int count;
+    /**
+     * Number of outputs.
+     */
+    protected int _count;
 
-   private Range[] ranges;        
-      
-   public StateSerializerBase(int outputCount)
-   {
-      count = outputCount;
-      
-      // default the output range values from 0.0 to 1.0
-      ranges = new Range[count];
-      
-      for( int i = 0; i < ranges.length; i++ )
-      {
-         ranges[i] = Range.UNIT_RANGE;
-      }      
-      
-   }
-   
-   /**
-    * Returns the length of the array returned by this
-    * class's serialize method.
-    * 
-    * @see mjensen.learning.reinforcement.value.StateSerializer#getCount()
-    */
-   public int getCount()
-   {
-      return count;
-   }
+    protected Range[] _ranges;
 
-   public void setValueRange( int index, double minValue, double maxValue )
-   {
-      setValueRange( index, new Range( minValue, maxValue ) );
-   }
-   
-   public void setValueRange( int index, Range range )
-   {
-      ranges[index] = range;
-   }   
-   
-   /**
-    * @see mjensen.learning.reinforcement.value.StateSerializer#getValueRange(int)
-    */
-   public Range getValueRange( int index )
-   {
-      return ranges[index];
-   }
+    public StateSerializerBase (int outputCount)
+    {
+        _count = outputCount;
 
-   /**
-    * @see mjensen.learning.reinforcement.value.StateSerializer#serialize(mjensen.learning.reinforcement.State)
-    */
-   public abstract double[] serialize( State state );
+        // default the output range values from 0.0 to 1.0
+        _ranges = new Range[_count];
 
+        for (int i = 0; i < _ranges.length; i++) {
+            _ranges[i] = Range.UNIT_RANGE;
+        }
+    }
+
+    /**
+     * Returns the length of the array returned by this class's serialize method.
+     */
+    @Override
+    public int getCount ()
+    {
+        return _count;
+    }
+
+    public void setValueRange (int index, double minValue, double maxValue)
+    {
+        setValueRange(index, new Range(minValue, maxValue));
+    }
+
+    public void setValueRange (int index, Range range)
+    {
+        _ranges[index] = range;
+    }
+
+    @Override
+    public Range getValueRange (int index)
+    {
+        return _ranges[index];
+    }
+
+    @Override
+    public abstract double[] serialize (State state);
 }

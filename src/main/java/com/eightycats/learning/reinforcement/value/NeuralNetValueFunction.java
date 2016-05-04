@@ -4,151 +4,130 @@ import com.eightycats.learning.reinforcement.*;
 import com.eightycats.learning.neuralnet.NeuralNet;
 import com.eightycats.litterbox.math.functions.Tanh;
 
-
 /**
- *
- *
- *
+ * Value function backed by a neural network.
  */
 public class NeuralNetValueFunction implements ValueFunction
 {
+    /**
+     * This is used to convert a State into floating point values that can be passed as input to the
+     * neural network.
+     */
+    protected StateSerializer _serializer;
 
     /**
-     * This is used to convert a State into
-     * floating point values that can be passed
-     * as input to the neural network.
+     * The network used to store and generalize this value function.
      */
-    protected StateSerializer serializer;
+    protected NeuralNet _network;
 
-    /**
-     * The network used to store and generalize
-     * this value function.
-     */
-    protected NeuralNet network;
-
-    public NeuralNetValueFunction( StateSerializer serializer )
+    public NeuralNetValueFunction (StateSerializer serializer)
     {
-        this( serializer, 0, 0 );
+        this(serializer, 0, 0);
     }
 
-
-    public NeuralNetValueFunction(StateSerializer serializer,
-                                  int hiddenLayerCount )
+    public NeuralNetValueFunction (StateSerializer serializer, int hiddenLayerCount)
     {
-       this( serializer, hiddenLayerCount, 0 );
+        this(serializer, hiddenLayerCount, 0);
     }
 
-    public NeuralNetValueFunction(StateSerializer serializer,
-                                  int hiddenLayerCount1,
-                                  int hiddenLayerCount2 )
+    public NeuralNetValueFunction (StateSerializer serializer, int hiddenLayerCount1,
+        int hiddenLayerCount2)
     {
 
-        this.serializer = serializer;
+        _serializer = serializer;
 
-        // if no hidden layer count was given,
-        // then use a rule of thumb to
+        // if no hidden layer count was given, then use a rule of thumb to
         // generate the number of hidden layer neurons
-        // to use
-        if( hiddenLayerCount1 <= 0 )
-        {
-           hiddenLayerCount1 = serializer.getCount();
+        if (hiddenLayerCount1 <= 0) {
+            hiddenLayerCount1 = serializer.getCount();
 
-           if( hiddenLayerCount2 > 0 )
-           {
-              hiddenLayerCount1 *= hiddenLayerCount2;
-              hiddenLayerCount1 = (int) Math.sqrt(hiddenLayerCount1);
-           }
-
+            if (hiddenLayerCount2 > 0) {
+                hiddenLayerCount1 *= hiddenLayerCount2;
+                hiddenLayerCount1 = (int) Math.sqrt(hiddenLayerCount1);
+            }
         }
 
-        if( hiddenLayerCount2 > 0 )
-        {
-           network = new NeuralNet( serializer.getCount(), hiddenLayerCount1, hiddenLayerCount2, 1 );
-        }
-        else
-        {
-           network = new NeuralNet( serializer.getCount(), hiddenLayerCount1, 1 );
+        if (hiddenLayerCount2 > 0) {
+            _network = new NeuralNet(serializer.getCount(), hiddenLayerCount1, hiddenLayerCount2, 1);
+        } else {
+            _network = new NeuralNet(serializer.getCount(), hiddenLayerCount1, 1);
         }
 
-        network.setFunction( new Tanh() );
-        network.randomize();
-
+        _network.setFunction(new Tanh());
+        _network.randomize();
     }
 
-    public NeuralNetValueFunction( StateSerializer serializer,
-                                   NeuralNet network )
+    public NeuralNetValueFunction (StateSerializer serializer, NeuralNet network)
     {
-       this.serializer = serializer;
-       this.network = network;
+        _serializer = serializer;
+        _network = network;
     }
 
     @Override
-    public void reset()
+    public void reset ()
     {
-        network.randomize();
+        _network.randomize();
     }
 
     @Override
-    public double getValue(State state)
+    public double getValue (State state)
     {
-
-        double[] inputs = serializer.serialize(state);
+        double[] inputs = _serializer.serialize(state);
 
         // forward prop inputs
-        double[] outputs = network.process( inputs );
+        double[] outputs = _network.process(inputs);
 
         return outputs[0];
 
     }
 
     @Override
-    public void update(State state, double deltaValue)
+    public void update (State state, double deltaValue)
     {
-        double[] inputs = serializer.serialize(state);
+        double[] inputs = _serializer.serialize(state);
 
         // pass the inputs through the network
         // so that it know which inputs these error
         // values are for
-        network.process( inputs );
+        _network.process(inputs);
 
-        // create an array to hole the update value
+        // create an array to hold the update value
         double[] errors = new double[1];
         errors[0] = deltaValue;
 
         // train the network by passing it
         // the update value as an error
-        network.backup( errors );
+        _network.backup(errors);
     }
 
-    public NeuralNet getNetwork()
+    public NeuralNet getNetwork ()
     {
-       return network;
+        return _network;
     }
 
-    public double getLearningRate()
+    public double getLearningRate ()
     {
-       return network.getLearningRate();
+        return _network.getLearningRate();
     }
 
-    public void setLearningRate( double learningRate )
+    public void setLearningRate (double learningRate)
     {
-       network.setLearningRate( learningRate );
+        _network.setLearningRate(learningRate);
     }
 
-    public double getLearningRateDecay()
+    public double getLearningRateDecay ()
     {
-       return getLearningRateDecay();
+        return getLearningRateDecay();
     }
 
-    public void setLearningRateDecay( double learningRateDecay )
+    public void setLearningRateDecay (double learningRateDecay)
     {
-       network.setLearningRateDecay( learningRateDecay );
+        _network.setLearningRateDecay(learningRateDecay);
     }
 
     @Override
-    public String toString()
+    public String toString ()
     {
-       return network.toString();
+        return _network.toString();
     }
-
 }

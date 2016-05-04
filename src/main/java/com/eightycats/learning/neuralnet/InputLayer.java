@@ -49,9 +49,6 @@ public class InputLayer
       return inputs.length;
    }
 
-   /**
-    * @see neuralnet.SourceVector#getSource(int)
-    */
    public double getOutput( int index )
    {
       // the first output value will always

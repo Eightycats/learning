@@ -8,59 +8,49 @@ import com.eightycats.learning.reinforcement.RewardFunction;
 import com.eightycats.learning.reinforcement.State;
 
 /**
- * 
- * SARSA stands for State-Action-Reward-State-Action.
- * 
- *
- *
+ * SARSA (State-Action-Reward-State-Action)
  */
 public class SARSA extends ActionEpisode
 {
-   
-   /**
-    * @param initialState
-    * @param policy
-    * @param valueFunction
-    * @param rewardFunction
-    */
-   public SARSA( State initialState, 
-                 Policy policy, 
-                 ActionValueFunction valueFunction, 
-                 RewardFunction rewardFunction )
-   {
-      super( initialState, policy, valueFunction, rewardFunction );
-   }
-   
-   /**
-    * @see mjensen.learning.reinforcement.EpisodeBase#next()
-    */
-   public State next()
-   {
-      
-      State state = getCurrentState();
-      Action action = _policy.selectAction( state );
-         
-      double currentValue = valueFunction.getValue( state, action );         
+    /**
+     * @param initialState starting state.
+     * @param policy chooses next action.
+     * @param valueFunction determines how valuable we currently think a State/Action pair are.
+     * @param rewardFunction returns the reward signal.
+     */
+    public SARSA (State initialState, Policy policy, ActionValueFunction valueFunction,
+        RewardFunction rewardFunction)
+    {
+        super(initialState, policy, valueFunction, rewardFunction);
+    }
 
-      State nextState = action.perform( state ); 
-      
-      // get the reward for performing the action
-      double reward = _rewardFunction.getReward( nextState );      
-      
-      Action nextAction = _policy.selectAction( nextState );
-      double nextValue = valueFunction.getValue( nextState, nextAction );  
+    /**
+     * Uses the policy to select a next Action from those available from the current State. Performs
+     * the Action, and returns the new State.
+     */
+    @Override
+    public State next ()
+    {
+        State state = getCurrentState();
+        Action action = _policy.selectAction(state);
 
-      double valueUpdate = reward + 
-                           getDiscount() * nextValue -
-                           currentValue;
-      
-      // mutliply the update value times the learning factor
-      valueUpdate *= getLearningRate();  
-      
-      valueFunction.update( state, action, valueUpdate );
-         
-      return nextState;
-         
-   }
+        double currentValue = _valueFunction.getValue(state, action);
 
+        State nextState = action.perform(state);
+
+        // get the reward for performing the action
+        double reward = _rewardFunction.getReward(nextState);
+
+        Action nextAction = _policy.selectAction(nextState);
+        double nextValue = _valueFunction.getValue(nextState, nextAction);
+
+        double valueUpdate = reward + getDiscount() * nextValue - currentValue;
+
+        // mutliply the update value times the learning factor
+        valueUpdate *= getLearningRate();
+
+        _valueFunction.update(state, action, valueUpdate);
+
+        return nextState;
+    }
 }

@@ -5,7 +5,7 @@ import com.eightycats.learning.reinforcement.util.EligibilityTrace;
 import com.eightycats.litterbox.logging.Logger;
 
 /**
- *
+ * TD Lambda (Temporal Difference Lambda) episode.
  */
 public class TDLambdaEpisode extends Episode
 {

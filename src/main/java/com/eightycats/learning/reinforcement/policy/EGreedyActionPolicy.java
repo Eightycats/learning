@@ -13,7 +13,8 @@ public class EGreedyActionPolicy extends EGreedyPolicyBase
     private ActionValueFunction valueFunction;
 
     /**
-     * @param epsilon
+     * @param epsilon percentage of how often this policy should choose an exploratory action
+     *                rather that the current best action.
      */
     public EGreedyActionPolicy (double epsilon, ActionValueFunction valueFunction)
     {

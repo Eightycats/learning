@@ -40,7 +40,7 @@ public class SARSALambda extends ActionEpisode
         State state = getCurrentState();
         Action action = _policy.selectAction(state);
 
-        double currentValue = valueFunction.getValue(state, action);
+        double currentValue = _valueFunction.getValue(state, action);
 
         State nextState = action.perform(state);
 
@@ -48,7 +48,7 @@ public class SARSALambda extends ActionEpisode
         double reward = _rewardFunction.getReward(nextState);
 
         Action nextAction = _policy.selectAction(nextState);
-        double nextValue = valueFunction.getValue(nextState, nextAction);
+        double nextValue = _valueFunction.getValue(nextState, nextAction);
 
         Logger.debug("******************************************");
         Logger.debug("Reward     : " + reward);
@@ -82,7 +82,7 @@ public class SARSALambda extends ActionEpisode
             double error = valueUpdate * trace.getEligibility(i);
             Logger.debug("State-Action[" + i + "] :\n" + eligiblePair);
             Logger.debug("Error        : " + error);
-            valueFunction.update(eligiblePair.getState(), eligiblePair.getAction(), error);
+            _valueFunction.update(eligiblePair.getState(), eligiblePair.getAction(), error);
 
         }
 

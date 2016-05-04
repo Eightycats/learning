@@ -1,52 +1,54 @@
 package com.eightycats.learning.reinforcement.value.event;
 
-import com.eightycats.learning.reinforcement.*;
+import com.eightycats.learning.reinforcement.State;
+import com.eightycats.learning.reinforcement.ValueFunction;
 
 /**
- *
- *
+ * A wrapper around a value function that fires off events when the function values change.
  */
 public class ValueModel implements StateValueModel
 {
+    protected ValueFunction _valueFunction;
 
-    protected ValueFunction valueFunction;
-
-    protected StateValueChangeSupport listeners;
+    protected StateValueChangeSupport _listeners;
 
     public ValueModel (ValueFunction valueFunction)
     {
-        this.valueFunction = valueFunction;
-        listeners = new StateValueChangeSupport();
+        _valueFunction = valueFunction;
+        _listeners = new StateValueChangeSupport();
     }
 
     @Override
     public void addListener (StateValueChangeListener listener)
     {
-        listeners.addListener(listener);
+        _listeners.addListener(listener);
     }
 
     @Override
     public void removeListener (StateValueChangeListener listener)
     {
-        listeners.removeListener(listener);
+        _listeners.removeListener(listener);
     }
 
     @Override
     public void reset ()
     {
-        valueFunction.reset();
+        _valueFunction.reset();
     }
 
     @Override
     public double getValue (State s)
     {
-        return valueFunction.getValue(s);
+        return _valueFunction.getValue(s);
     }
 
     @Override
     public void update (State state, double deltaValue)
     {
-        valueFunction.update(state, deltaValue);
-        listeners.fireEvent(new StateValueChangeEvent(valueFunction, state, deltaValue));
+        _valueFunction.update(state, deltaValue);
+        // don't even bother to create the event if no one cares
+        if (_listeners.hasListeners()) {
+            _listeners.fireEvent(new StateValueChangeEvent(_valueFunction, state, deltaValue));
+        }
     }
 }

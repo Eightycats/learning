@@ -11,6 +11,7 @@ public class ActionEligibilityTrace extends EligibilityTrace<StateActionPair>
 {
     public ActionEligibilityTrace ()
     {
+        this(new EligibilityConfig());
     }
 
     public ActionEligibilityTrace (EligibilityConfig config)

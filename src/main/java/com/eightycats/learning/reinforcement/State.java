@@ -1,27 +1,20 @@
 package com.eightycats.learning.reinforcement;
 
 /**
- * 
- *
- *
+ * A common interface for States.
  */
 public interface State
 {
-
    /**
     * Returns the possible actions from this state.
-    *
-    * @return Action[]
     */
    public Action[] getActions();
 
    /**
     * Is this an end state?
-    *
-    * @return boolean
     */
    public boolean isTerminal();
- 
-   public boolean equals( Object object );   
-   
+
+   @Override
+   public boolean equals( Object object );
 }

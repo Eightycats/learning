@@ -3,7 +3,7 @@ package com.eightycats.learning.reinforcement;
 import com.eightycats.learning.reinforcement.util.EligibilityConstants;
 
 /**
- *
+ * A base training episode.
  */
 public abstract class EpisodeBase
     implements EligibilityConstants
@@ -13,10 +13,19 @@ public abstract class EpisodeBase
      */
     protected EpisodeConfig _config;
 
+    /**
+     * The state we are currently in.
+     */
     protected State _currentState;
 
+    /**
+     * Select the next state.
+     */
     protected Policy _policy;
 
+    /**
+     * The reward signal.
+     */
     protected RewardFunction _rewardFunction;
 
     public EpisodeBase (State initialState, Policy policy, RewardFunction rewardFunction)

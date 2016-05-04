@@ -1,9 +1,11 @@
 package com.eightycats.learning.neuralnet.train;
 
-import com.eightycats.litterbox.math.*;
+import com.eightycats.learning.neuralnet.InputSource;
+import com.eightycats.learning.neuralnet.NeuralNet;
 import com.eightycats.litterbox.logging.Logger;
-import com.eightycats.litterbox.math.normalization.Normalizer;
-import com.eightycats.learning.neuralnet.*;
+import com.eightycats.litterbox.math.IncrementalAverage;
+import com.eightycats.litterbox.math.Processor;
+import com.eightycats.litterbox.math.VectorMath;
 
 /**
  *
@@ -13,34 +15,29 @@ public class TrainingHarness
 {
     private Processor expected;
 
-    public TrainingHarness(Processor trainingFunction)
+    public TrainingHarness (Processor trainingFunction)
     {
         expected = trainingFunction;
     }
 
-    public double[] getExpectedOutput(double[] inputs)
+    public double[] getExpectedOutput (double[] inputs)
     {
         return expected.process(inputs);
     }
 
-    public static void train( Processor trainingFunction,
-                              NeuralNet network,
-                              InputSource inputSource,
-                              int trainingRounds )
+    public static void train (Processor trainingFunction, NeuralNet network,
+        InputSource inputSource, int trainingRounds)
     {
-        TrainingHarness harness = new TrainingHarness( trainingFunction );
-        harness.train( network, inputSource, trainingRounds );
+        TrainingHarness harness = new TrainingHarness(trainingFunction);
+        harness.train(network, inputSource, trainingRounds);
     }
 
-    public void train(NeuralNet network,
-                      InputSource inputSource,
-                      int trainingRounds)
+    public void train (NeuralNet network, InputSource inputSource, int trainingRounds)
     {
 
         IncrementalAverage averageError = new IncrementalAverage();
 
-        for (int count = 0; count < trainingRounds; count++)
-        {
+        for (int count = 0; count < trainingRounds; count++) {
 
             // Logger.debug( "Training round: " + count);
 
@@ -61,13 +58,12 @@ public class TrainingHarness
 
             // Logger.debug("Error magnitude: " + error );
 
-            averageError.add( error );
-            Logger.debug("Average error: " + averageError.getAverage() );
+            averageError.add(error);
+            Logger.debug("Average error: " + averageError.getAverage());
 
         }
 
-        Logger.debug( network.toString() );
-
+        Logger.debug(network.toString());
     }
 
 }

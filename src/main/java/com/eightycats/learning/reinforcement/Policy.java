@@ -1,13 +1,9 @@
 package com.eightycats.learning.reinforcement;
 
 /**
- * Policies are used to select which action to perform.
- *
- *
+ * Policies select which action to perform for a given State.
  */
 public interface Policy
 {
-
-   public Action selectAction( State state );
-
+    public Action selectAction (State state);
 }
