@@ -1,12 +1,12 @@
 package com.eightycats.learning.reinforcement.value.tiling;
 
-import com.eightycats.litterbox.math.Range;
-import com.eightycats.litterbox.math.tiling.TileCoding;
-import com.eightycats.litterbox.math.tiling.TilingDimension;
 import com.eightycats.learning.reinforcement.State;
 import com.eightycats.learning.reinforcement.ValueFunction;
 import com.eightycats.learning.reinforcement.value.StateSerializer;
 import com.eightycats.learning.reinforcement.value.ValueTableBase;
+import com.eightycats.math.tiling.TileCoding;
+import com.eightycats.math.tiling.TilingDimension;
+import com.eightycats.math.util.Range;
 
 /**
  *

@@ -4,7 +4,7 @@
 package com.eightycats.learning.neuralnet.test;
 
 import com.eightycats.learning.neuralnet.*;
-import com.eightycats.litterbox.math.*;
+import com.eightycats.math.*;
 
 /**
  *

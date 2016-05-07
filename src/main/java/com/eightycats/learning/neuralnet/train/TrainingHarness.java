@@ -3,9 +3,9 @@ package com.eightycats.learning.neuralnet.train;
 import com.eightycats.learning.neuralnet.InputSource;
 import com.eightycats.learning.neuralnet.NeuralNet;
 import com.eightycats.litterbox.logging.Logger;
-import com.eightycats.litterbox.math.IncrementalAverage;
-import com.eightycats.litterbox.math.Processor;
-import com.eightycats.litterbox.math.VectorMath;
+import com.eightycats.math.average.IncrementalAverage;
+import com.eightycats.math.functions.Processor;
+import com.eightycats.math.util.VectorMath;
 
 /**
  *
@@ -13,7 +13,7 @@ import com.eightycats.litterbox.math.VectorMath;
  */
 public class TrainingHarness
 {
-    private Processor expected;
+    protected Processor expected;
 
     public TrainingHarness (Processor trainingFunction)
     {

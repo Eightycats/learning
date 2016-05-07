@@ -1,32 +1,29 @@
 package com.eightycats.learning.neuralnet.io;
 
-import com.eightycats.litterbox.math.functions.Tanh;
-import com.eightycats.litterbox.xml.XMLException;
-import com.eightycats.litterbox.xml.dom.DocumentAccessor;
-import com.eightycats.litterbox.xml.dom.DocumentParser;
-import com.eightycats.litterbox.xml.dom.SimplePath;
-import com.eightycats.learning.neuralnet.InputLayer;
-import com.eightycats.learning.neuralnet.Layer;
-import com.eightycats.learning.neuralnet.NeuralNet;
-import com.eightycats.learning.neuralnet.Neuron;
-
 import java.io.PrintStream;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import com.eightycats.learning.neuralnet.InputLayer;
+import com.eightycats.learning.neuralnet.Layer;
+import com.eightycats.learning.neuralnet.NeuralNet;
+import com.eightycats.learning.neuralnet.Neuron;
+import com.eightycats.litterbox.xml.dom.DocumentAccessor;
+import com.eightycats.litterbox.xml.dom.DocumentParser;
+import com.eightycats.math.functions.Tanh;
+
 /**
  *
  *
  *
  */
-public class NeuralNetXMLWriter implements NeuralNetWriter
+public class NeuralNetXMLWriter
+    implements NeuralNetWriter
 {
-
     public static void writeNetwork (NeuralNet network, PrintStream output) throws Exception
     {
-
         Document document = DocumentParser.createDocument(NeuralNetXMLConstants.NETWORK);
 
         Element root = document.getDocumentElement();
@@ -62,9 +59,7 @@ public class NeuralNetXMLWriter implements NeuralNetWriter
                 int weightCount = neuron.getWeightCount();
                 for (int k = 0; k < weightCount; k++) {
                     Node weightNode = generator.addChild(neuronNode, NeuralNetXMLConstants.WEIGHT);
-
-                    generator.setText(weightNode, Double.toString(neuron.getWeight(k)));
-
+                    DocumentAccessor.setText(weightNode, Double.toString(neuron.getWeight(k)));
                 }
 
             }
@@ -93,7 +88,5 @@ public class NeuralNetXMLWriter implements NeuralNetWriter
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
     }
-
 }

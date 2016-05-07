@@ -2,8 +2,8 @@ package com.eightycats.learning.neuralnet.test;
 
 import java.util.Random;
 
-import com.eightycats.litterbox.math.IncrementalAverage;
-import com.eightycats.litterbox.math.normalization.Normalizer;
+import com.eightycats.math.IncrementalAverage;
+import com.eightycats.math.normalization.Normalizer;
 import com.eightycats.learning.neuralnet.InputSource;
 import com.eightycats.learning.neuralnet.NeuralNet;
 import com.eightycats.learning.neuralnet.train.TrainingHarness;

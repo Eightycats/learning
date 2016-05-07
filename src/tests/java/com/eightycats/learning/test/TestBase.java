@@ -2,8 +2,8 @@ package com.eightycats.learning.neuralnet.test;
 
 import com.eightycats.learning.neuralnet.*;
 import com.eightycats.learning.neuralnet.train.*;
-import com.eightycats.litterbox.math.Processor;
-import com.eightycats.litterbox.math.functions.Tanh;
+import com.eightycats.math.Processor;
+import com.eightycats.math.functions.Tanh;
 
 /**
  *

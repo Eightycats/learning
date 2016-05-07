@@ -1,24 +1,23 @@
 package com.eightycats.learning.neuralnet;
 
-import com.eightycats.litterbox.math.functions.Derivable;
-import com.eightycats.litterbox.math.functions.Function;
-import com.eightycats.litterbox.math.functions.Sigmoid;
-import com.eightycats.litterbox.math.*;
+import com.eightycats.math.functions.Derivable;
+import com.eightycats.math.functions.Function;
+import com.eightycats.math.functions.Processor;
+import com.eightycats.math.functions.Sigmoid;
+import com.eightycats.math.util.ArrayUtils;
 
 /**
- *
- *
- *
+ * A layer in a NeuralNet.
  */
 public class Layer implements Processor
 {
-    private double[] inputs;
+    protected double[] inputs;
 
-    private double[] outputs;
+    protected double[] outputs;
 
-    private Neuron[] neurons;
+    protected Neuron[] neurons;
 
-    private Function function;
+    protected Function function;
 
     public Layer (int inputCount, int neuronCount)
     {
@@ -169,7 +168,6 @@ public class Layer implements Processor
         }
 
         return upstreamErrors;
-
     }
 
     public double[] getOutputs ()

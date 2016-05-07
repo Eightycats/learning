@@ -1,7 +1,7 @@
 package com.eightycats.learning.reinforcement.value;
 
-import com.eightycats.litterbox.math.Range;
 import com.eightycats.learning.reinforcement.State;
+import com.eightycats.math.util.Range;
 
 /**
  * Base class for serializing states to values between 0.0 and 1.0.

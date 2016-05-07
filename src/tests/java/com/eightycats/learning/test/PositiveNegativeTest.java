@@ -2,9 +2,9 @@ package com.eightycats.learning.neuralnet.test;
 
 import com.eightycats.learning.neuralnet.*;
 
-import com.eightycats.litterbox.math.functions.*;
-import com.eightycats.litterbox.math.IncrementalAverage;
-import com.eightycats.litterbox.math.*;
+import com.eightycats.math.functions.*;
+import com.eightycats.math.IncrementalAverage;
+import com.eightycats.math.*;
 
 /**
  *

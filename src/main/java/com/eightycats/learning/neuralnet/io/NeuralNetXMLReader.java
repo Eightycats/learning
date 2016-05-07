@@ -9,17 +9,17 @@ import java.util.List;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import com.eightycats.litterbox.logging.Logger;
-import com.eightycats.litterbox.math.functions.Function;
-import com.eightycats.litterbox.xml.sax.XMLHandlerBase;
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
 import com.eightycats.learning.neuralnet.InputLayer;
 import com.eightycats.learning.neuralnet.Layer;
 import com.eightycats.learning.neuralnet.NeuralNet;
 import com.eightycats.learning.neuralnet.Neuron;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
+import com.eightycats.litterbox.logging.Logger;
+import com.eightycats.litterbox.xml.sax.XMLHandlerBase;
+import com.eightycats.math.functions.Function;
 
 /**
  * This is a utility class for reading a NeuralNet instance from XML.

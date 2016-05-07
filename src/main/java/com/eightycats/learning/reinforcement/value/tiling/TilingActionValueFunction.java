@@ -8,10 +8,8 @@ import com.eightycats.learning.reinforcement.ActionValueFunction;
 import com.eightycats.learning.reinforcement.State;
 import com.eightycats.learning.reinforcement.value.StateSerializer;
 import com.eightycats.learning.reinforcement.value.ValueTableBase;
-import com.eightycats.litterbox.logging.Logger;
-import com.eightycats.litterbox.math.ArrayUtils;
-import com.eightycats.litterbox.math.Range;
-import com.eightycats.litterbox.math.tiling.TileCoding;
+import com.eightycats.math.tiling.TileCoding;
+import com.eightycats.math.util.Range;
 
 /**
  *
@@ -19,7 +17,6 @@ import com.eightycats.litterbox.math.tiling.TileCoding;
  */
 public class TilingActionValueFunction implements ActionValueFunction
 {
-
     /**
      * This maps each unique tile ID to a table of action values.
      */
@@ -77,40 +74,27 @@ public class TilingActionValueFunction implements ActionValueFunction
     {
         double[] inputs = serializer.serialize(state);
 
-        Logger.debug("Inputs  : " + ArrayUtils.toString(inputs));
-
         long[] tiles = tilings.getTiles(inputs);
 
         // The action's value is the sum of
         // each tile's value, so the update value
         // should be divided evenly among each tile.
         double updateValue = deltaValue / tiles.length;
-
-        Logger.debug("Updating: " + state + "-" + action);
-        Logger.debug("Tiles   : " + ArrayUtils.toString(tiles));
-        Logger.debug("From    : " + getValue(state, action));
-
         for (int tileIndex = 0; tileIndex < tiles.length; tileIndex++) {
             ActionTable actionValues = getActionValueTable(tiles[tileIndex]);
             actionValues.update(action, updateValue);
         }
-
-        Logger.debug("To     : " + getValue(state, action));
-
     }
 
     public double getValue (double[] inputs, Action action)
     {
-
         long[] tiles = tilings.getTiles(inputs);
 
         // add up the values of each of the tiles
         double sum = 0.0;
-
         for (int i = 0; i < tiles.length; i++) {
             sum += getValue(tiles[i], action);
         }
-
         return sum;
     }
 

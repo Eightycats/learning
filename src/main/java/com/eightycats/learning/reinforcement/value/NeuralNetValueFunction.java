@@ -1,8 +1,9 @@
 package com.eightycats.learning.reinforcement.value;
 
-import com.eightycats.learning.reinforcement.*;
 import com.eightycats.learning.neuralnet.NeuralNet;
-import com.eightycats.litterbox.math.functions.Tanh;
+import com.eightycats.learning.reinforcement.State;
+import com.eightycats.learning.reinforcement.ValueFunction;
+import com.eightycats.math.functions.Tanh;
 
 /**
  * Value function backed by a neural network.

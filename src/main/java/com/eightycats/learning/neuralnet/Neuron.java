@@ -1,26 +1,24 @@
 package com.eightycats.learning.neuralnet;
 
-import com.eightycats.litterbox.math.ArrayUtils;
-import com.eightycats.litterbox.math.RandomUtils;
-import com.eightycats.litterbox.math.functions.Function;
+import com.eightycats.math.functions.Function;
+import com.eightycats.math.util.ArrayUtils;
+import com.eightycats.math.util.RandomUtils;
 
 /**
- *
  *
  */
 public class Neuron
 {
-
     /**
      * The input weights. inputs[n] is multiplied by weights[n] to get the weighted input value.
      */
-    private double[] weights;
+    protected double[] weights;
 
     /**
      * The most recent weight adjustments. These values are used in calulating momentum when
      * training a network.
      */
-    private double[] momentum;
+    protected double[] momentum;
 
     public Neuron (int weightCount)
     {
@@ -56,7 +54,7 @@ public class Neuron
     }
 
     /**
-     * Randomizes the weight values.
+     * Randomizes the weight values within the range of -0.4 and 0.4.
      */
     public void randomize ()
     {
@@ -64,8 +62,7 @@ public class Neuron
     }
 
     /**
-     * Randomizes the weight values within the given range. By default, weights are within the range
-     * of -0.4 and 0.4.
+     * Randomizes the weight values within the given range.
      *
      * @param minWeight
      *            double a minimum weight value between -1.0 and 1.0.
@@ -79,7 +76,6 @@ public class Neuron
             double random = RandomUtils.randomInRange(minWeight, maxWeight);
 
             setWeight(i, random);
-
         }
 
         // clear out the momentum array
@@ -129,7 +125,6 @@ public class Neuron
 
     public double process (double[] inputs, Function function)
     {
-
         // get the weighted sum of the input values
         double stimulation = getStimulation(inputs);
 

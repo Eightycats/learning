@@ -1,7 +1,7 @@
 package com.eightycats.learning.reinforcement.value;
 
-import com.eightycats.litterbox.math.Range;
-import com.eightycats.learning.reinforcement.*;
+import com.eightycats.learning.reinforcement.State;
+import com.eightycats.math.util.Range;
 
 /**
  * Implementations of this interface are used to convert a State into an array of double values.
@@ -32,5 +32,4 @@ public interface StateSerializer
      * @return the range of possible output values.
      */
     public Range getValueRange (int index);
-
 }
