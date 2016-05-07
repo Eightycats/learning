@@ -1,102 +1,78 @@
 package com.eightycats.learning.neuralnet;
 
-import com.eightycats.litterbox.math.*;
 
 /**
- * This is a stateful input layer. It maintains a copy of the latest
- * input values that it was passed. This input layer
- * is biased, meaning that the value of the output at index 0 will always
+ * A stateful input layer. It maintains a copy of the latest input values that it was
+ * passed. This input layer is biased, meaning that the value of the output at index 0 will always
  * be 1 by default.
- *
- *
  */
 public class InputLayer
 {
+    /**
+     * The latest output values.
+     */
+    protected double[] _outputs;
 
-   /**
-    * A bias input value of 1 will always be returned as the first input.
+    public InputLayer (int inputCount)
+    {
+        _outputs = new double[inputCount + 1];
+    }
+
+    public InputLayer (double[] inputs)
+    {
+        this(inputs.length);
+        setInputs(inputs);
+        // Use a bias input value of 1 by default
+        setBias(1.0);
+    }
+
+    public void setInputs (double[] inputs)
+    {
+        // skip over the bias slot
+        System.arraycopy(inputs, 0, _outputs, 1, inputs.length);
+    }
+
+    public void setInput (int index, double value)
+    {
+        _outputs[index + 1] = value;
+    }
+
+    public int getInputCount ()
+    {
+        return _outputs.length - 1;
+    }
+
+    public double getOutput (int index)
+    {
+        return _outputs[index];
+    }
+
+    /**
+     * Gets the number of output values from this layer.
+     */
+    public int getOutputCount ()
+    {
+        return _outputs.length;
+    }
+
+    /**
+    * Gets the output values.
     */
-   private double bias = 1.0;
+    public double[] getOutputs ()
+    {
+        return _outputs;
+    }
 
-   /**
-    * The lates input values passed to this input layer.
-    */
-   private double[] inputs;
+    /**
+     * In case you really want to change the bias value. The bias is 1 by default.
+     */
+    public void setBias (double biasValue)
+    {
+        _outputs[0] = biasValue;
+    }
 
-   public InputLayer(int inputCount)
-   {
-      inputs = new double[inputCount];
-   }
-
-   public InputLayer( double[] inputValues )
-   {
-      this( inputValues.length );
-      setInputs( inputValues );
-   }
-
-   public void setInputs( double[] inputValues )
-   {
-      ArrayUtils.copyInto( inputValues, inputs );
-   }
-
-   public void setInput(int index, double value)
-   {
-      inputs[index] = value;
-   }
-
-   public int getInputCount()
-   {
-      return inputs.length;
-   }
-
-   public double getOutput( int index )
-   {
-      // the first output value will always
-      // be the bias value
-      if( index == 0 )
-      {
-         return bias;
-      }
-
-      return inputs[index-1];
-   }
-
-   /**
-    *
-    */
-   public int getOutputCount()
-   {
-      return getInputCount() + 1;
-   }
-
-   /**
-    *
-    */
-   public double[] getOutputs()
-   {
-      double[] outputs = new double[ getOutputCount() ];
-      outputs[0] = bias;
-
-      System.arraycopy( inputs, 0, outputs, 1, inputs.length );
-
-      return outputs;
-   }
-
-   /**
-    * In case you really want to change the bias value. The
-    * bias value is 1 by default.
-    *
-    * @param biasValue double
-    */
-   public void setBias(double biasValue)
-   {
-      bias = biasValue;
-   }
-
-   public double getBias()
-   {
-      return bias;
-   }
-
+    public double getBias ()
+    {
+        return _outputs[0];
+    }
 }
-
