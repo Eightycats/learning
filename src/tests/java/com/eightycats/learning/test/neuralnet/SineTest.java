@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.eightycats.learning.neuralnet.test;
+package com.eightycats.learning.test;
 
 import java.util.Random;
 
@@ -23,63 +23,61 @@ import com.eightycats.learning.neuralnet.NeuralNet;
 import com.eightycats.learning.neuralnet.train.TrainingHarness;
 
 /**
- *
- *
- *
+ * Trains a neural net against a sine wave.
  */
-public class SineTest extends TestBase implements InputSource, Normalizer
+public class SineTest extends TestBase
+    implements InputSource, Normalizer
 {
 
     private static Random random = new Random();
 
-    public double[] process(double[] input)
+    public double[] process (double[] input)
     {
         double[] result = new double[1];
-        result[0] = function( input[0] );
+        result[0] = function(input[0]);
         return result;
     }
 
-    public double function(double x)
+    public double function (double x)
     {
-       return Math.sin(x) / 2;
+        return Math.sin(x) / 2;
     }
 
-    public double[] normalize( double[] input )
+    public double[] normalize (double[] input)
     {
-       return new double[]{ normalize( input[0] ) };
-    }
-    
-    public double normalize( double input )
-    {
-       return input / (2 * Math.PI);
+        return new double[] { normalize(input[0]) };
     }
 
-    public void reset()
+    public double normalize (double input)
+    {
+        return input / (2 * Math.PI);
+    }
+
+    public void reset ()
     {
     }
 
-    public double[] nextInput()
+    public double[] nextInput ()
     {
         double[] inputs = new double[1];
         inputs[0] = random.nextDouble() * 2 * Math.PI;
         return inputs;
     }
 
-    public boolean hasMoreInputs()
+    public boolean hasMoreInputs ()
     {
         return true;
     }
 
-    public void train()
+    public void train ()
     {
 
-        try
-        {
-            NeuralNet network = train( 1, 21, 1, .2, 0, 0.0, this, 10000 );
+        try {
+            NeuralNet network = train(1, 21, 1, .2, 0, 0.0, this, 10000);
 
-            TrainingHarness trainer = new TrainingHarness( this );
+            TrainingHarness trainer = new TrainingHarness(this);
             network.setLearningRateDecay(.0001);
-            trainer.train( network, this, 20000 );
+            trainer.train(network, this, 20000);
 
             System.out.println("\n\nTraining complete.\n\n");
 
@@ -91,48 +89,43 @@ public class SineTest extends TestBase implements InputSource, Normalizer
 
             double[] inputs = new double[1];
 
-            for(double i = 0; i <= twoPI; i += increment)
-            {
+            for (double i = 0; i <= twoPI; i += increment) {
 
                 inputs[0] = i;
                 // inputs[0] = this.normalize(i);
 
-                System.out.print( Math.toDegrees(i) );
-                System.out.print( "," );
+                System.out.print(Math.toDegrees(i));
+                System.out.print(",");
 
                 double[] output = network.process(inputs);
 
                 System.out.print(output[0]);
-                System.out.print( "," );
+                System.out.print(",");
 
                 double[] expected = this.process(inputs);
-                System.out.print( expected[0] );
-                System.out.print( "," );
+                System.out.print(expected[0]);
+                System.out.print(",");
 
                 double error = output[0] - expected[0];
-                System.out.print( error  );
-                System.out.print( "," );
+                System.out.print(error);
+                System.out.print(",");
 
-                average.add( error );
+                average.add(error);
 
                 System.out.println(average.getAverage());
 
             }
 
-        }
-        catch (Throwable ex)
-        {
+        } catch (Throwable ex) {
             ex.printStackTrace();
         }
 
     }
 
-    public static void main(String[] args)
+    public static void main (String[] args)
     {
-
         SineTest test = new SineTest();
         test.train();
-
     }
 
 }

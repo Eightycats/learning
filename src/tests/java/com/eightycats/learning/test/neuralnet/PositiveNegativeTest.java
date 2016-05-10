@@ -14,11 +14,10 @@
 
 package com.eightycats.learning.neuralnet.test;
 
-import com.eightycats.learning.neuralnet.*;
-
-import com.eightycats.math.functions.*;
-import com.eightycats.math.IncrementalAverage;
-import com.eightycats.math.*;
+import com.eightycats.learning.neuralnet.NeuralNet;
+import com.eightycats.math.average.IncrementalAverage;
+import com.eightycats.math.functions.Tanh;
+import com.eightycats.math.util.VectorMath;
 
 /**
  *

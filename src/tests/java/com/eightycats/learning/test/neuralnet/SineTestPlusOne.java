@@ -14,19 +14,17 @@
 
 package com.eightycats.learning.neuralnet.test;
 
-
 /**
- *
- *
+ * Trains a neural net against the values of a Sine wave plus 1 (all positive).
  */
 public class SineTestPlusOne extends SineTest
 {
-    public double function(double x)
+    public double function (double x)
     {
-       return (Math.sin(x)+1) / 2;
+        return (Math.sin(x) + 1) / 2;
     }
 
-    public static void main(String[] args)
+    public static void main (String[] args)
     {
         SineTest test = new SineTestPlusOne();
         test.train();

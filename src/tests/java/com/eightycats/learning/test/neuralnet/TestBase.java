@@ -20,40 +20,24 @@ import com.eightycats.math.Processor;
 import com.eightycats.math.functions.Tanh;
 
 /**
- *
- *
- *
+ * Base class for setting up a neural network and a test harness to train it.
  */
 public abstract class TestBase implements Processor
 {
-
-
-
-    public NeuralNet train(int inputCount,
-                           int hiddenCount,
-                           int outputCount,
-                           double learningRate,
-                           double learningRateDecay,
-                           double momentum,
-                           InputSource trainingInput,
-                           int trainingRounds)
+    public NeuralNet train (int inputCount, int hiddenCount, int outputCount, double learningRate,
+        double learningRateDecay, double momentum, InputSource trainingInput, int trainingRounds)
     {
+        TrainingHarness trainer = new TrainingHarness(this);
 
-       TrainingHarness trainer = new TrainingHarness( this );
+        NeuralNet network = new NeuralNet(inputCount, hiddenCount, outputCount);
 
+        network.setFunction(new Tanh());
+        network.setLearningRate(learningRate);
+        network.setLearningRateDecay(learningRateDecay);
+        network.setMomentum(momentum);
 
-       NeuralNet network =
-            new NeuralNet( inputCount, hiddenCount, outputCount );
+        trainer.train(network, trainingInput, trainingRounds);
 
-       network.setFunction( new Tanh() );
-       network.setLearningRate( learningRate );
-       network.setLearningRateDecay( learningRateDecay );
-       network.setMomentum( momentum );
-
-       trainer.train( network, trainingInput, trainingRounds );
-
-       return network;
-
+        return network;
     }
-
 }
