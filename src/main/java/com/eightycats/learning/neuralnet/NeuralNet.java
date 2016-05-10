@@ -40,12 +40,9 @@ public class NeuralNet implements Processor
     /**
      * Creates a network with one hidden layer.
      *
-     * @param inputCount
-     *            int
-     * @param hiddenNeurons
-     *            int
-     * @param outputCount
-     *            int
+     * @param inputCount number of inputs to this network.
+     * @param hiddenNeurons the number of neurons in the  hidden layer.
+     * @param outputCount number of expected outputs from this network.
      */
     public NeuralNet (int inputCount, int hiddenNeurons, int outputCount)
     {
@@ -58,14 +55,10 @@ public class NeuralNet implements Processor
     /**
      * Creates a network with two hidden layers.
      *
-     * @param inputCount
-     *            int
-     * @param hiddenLayer1Count
-     *            int
-     * @param hiddenLayer2Count
-     *            int
-     * @param outputCount
-     *            int
+     * @param inputCount number of inputs to this network.
+     * @param hiddenLayer1Count the number of neurons in the first hidden layer.
+     * @param hiddenLayer2Count the number of neurons in the second hidden layer.
+     * @param outputCount number of expected outputs from this network.
      */
     public NeuralNet (int inputCount, int hiddenLayer1Count, int hiddenLayer2Count, int outputCount)
     {
@@ -82,6 +75,9 @@ public class NeuralNet implements Processor
         this.layers = layers;
     }
 
+    /**
+     * Sets the threshold function on all of the layers.
+     */
     public void setFunction (Function threshold)
     {
         for (int i = 0; i < layers.length; i++) {
@@ -120,25 +116,21 @@ public class NeuralNet implements Processor
      */
     public double[] train (double[] expectedOutputs)
     {
-        // the error values are the expected values
-        // minus the current output values
+        // the error values are the expected values minus the current output values
         double[] errors = ArrayUtils.copy(expectedOutputs);
         ArrayUtils.subtract(errors, getOutputs());
 
-        // backpropagate the errors through this network's
-        // layers and update the connection weights
+        // backpropagate the errors through this network's layers and update the connection weights
         backup(errors);
 
         return errors;
     }
 
     /**
-     *
      * @param errors the differences between the current network output and the expected output.
      */
     public void backup (double[] errors)
     {
-
         for (int i = layers.length - 1; i >= 0; i--) {
             errors = layers[i].backup(errors, learningRate, momentum);
         }
@@ -150,8 +142,6 @@ public class NeuralNet implements Processor
     /**
      * This gets this network's output values from the last time that the process() method was
      * called.
-     *
-     * @return double[]
      */
     public double[] getOutputs ()
     {
@@ -159,26 +149,16 @@ public class NeuralNet implements Processor
         return layers[layers.length - 1].getOutputs();
     }
 
-    /**
-     * @return the learningRate.
-     */
     public double getLearningRate ()
     {
         return learningRate;
     }
 
-    /**
-     * @param learningRate
-     *            The learningRate to set.
-     */
     public void setLearningRate (double learningRate)
     {
         this.learningRate = learningRate;
     }
 
-    /**
-     * @return returns the learning rate decay.
-     */
     public double getLearningRateDecay ()
     {
         return learningRateDecay;
@@ -204,18 +184,14 @@ public class NeuralNet implements Processor
      */
     public void randomize ()
     {
-
         for (int i = 0; i < layers.length; i++) {
             layers[i].randomize();
         }
-
     }
 
     /**
      * This returns the number of hidden layers plus one for the output layer. This does not count
-     * the input layer. This method is useful when writing out a representation of this network.
-     *
-     * @return int
+     * the input layer.
      */
     public int getLayerCount ()
     {

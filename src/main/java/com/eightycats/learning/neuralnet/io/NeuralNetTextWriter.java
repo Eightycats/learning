@@ -24,7 +24,8 @@ import com.eightycats.learning.neuralnet.NeuralNet;
 /**
  * Logs the values of a neural net as plain text.
  */
-public class NeuralNetTextWriter implements NeuralNetWriter
+public class NeuralNetTextWriter
+    implements NeuralNetWriter
 {
     protected static NeuralNetTextWriter writer = new NeuralNetTextWriter();
 

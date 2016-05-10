@@ -138,8 +138,6 @@ public class NeuralNetXMLReader extends XMLHandlerBase
                 throw new SAXException(ex);
             }
         }
-
-        // TODO: read weights
     }
 
     @Override

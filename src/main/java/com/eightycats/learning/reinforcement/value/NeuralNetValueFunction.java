@@ -22,7 +22,8 @@ import com.eightycats.math.functions.Tanh;
 /**
  * Value function backed by a neural network.
  */
-public class NeuralNetValueFunction implements ValueFunction
+public class NeuralNetValueFunction
+    implements ValueFunction
 {
     /**
      * This is used to convert a State into floating point values that can be passed as input to the
@@ -48,7 +49,6 @@ public class NeuralNetValueFunction implements ValueFunction
     public NeuralNetValueFunction (StateSerializer serializer, int hiddenLayerCount1,
         int hiddenLayerCount2)
     {
-
         _serializer = serializer;
 
         // if no hidden layer count was given, then use a rule of thumb to
@@ -93,7 +93,6 @@ public class NeuralNetValueFunction implements ValueFunction
         double[] outputs = _network.process(inputs);
 
         return outputs[0];
-
     }
 
     @Override
@@ -110,8 +109,7 @@ public class NeuralNetValueFunction implements ValueFunction
         double[] errors = new double[1];
         errors[0] = deltaValue;
 
-        // train the network by passing it
-        // the update value as an error
+        // train the network by passing it the update value as an error
         _network.backup(errors);
     }
 

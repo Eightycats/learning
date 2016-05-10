@@ -157,21 +157,10 @@ public class TilingActionValueFunction
         }
 
         return actionValues;
-
     }
 
-    protected class ActionTable extends ValueTableBase
+    protected class ActionTable extends ValueTableBase<Action>
     {
-        public double getValue (Action action)
-        {
-            return super.getValue(action);
-        }
-
-        public void update (Action action, double deltaValue)
-        {
-            super.update(action, deltaValue);
-        }
-
         /**
          * Returns the default action value
          */
@@ -180,7 +169,5 @@ public class TilingActionValueFunction
         {
             return TilingActionValueFunction.this.getDefaultValue();
         }
-
     }
-
 }

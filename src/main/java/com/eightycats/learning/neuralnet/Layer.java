@@ -21,17 +21,18 @@ import com.eightycats.math.functions.Sigmoid;
 import com.eightycats.math.util.ArrayUtils;
 
 /**
- * A layer in a NeuralNet.
+ * A layer of neurons in a NeuralNet.
  */
-public class Layer implements Processor
+public class Layer
+    implements Processor
 {
-    protected double[] inputs;
+    protected double[] _inputs;
 
-    protected double[] outputs;
+    protected double[] _outputs;
 
-    protected Neuron[] neurons;
+    protected Neuron[] _neurons;
 
-    protected Function function;
+    protected Function _function;
 
     public Layer (int inputCount, int neuronCount)
     {
@@ -40,16 +41,16 @@ public class Layer implements Processor
 
     public Layer (int inputCount, int neuronCount, Function thresholdFunction)
     {
-        function = thresholdFunction;
+        _function = thresholdFunction;
 
         // create arrays to store the most recent inputs and
         // outputs for this network
-        inputs = new double[inputCount];
-        outputs = new double[neuronCount];
+        _inputs = new double[inputCount];
+        _outputs = new double[neuronCount];
 
-        neurons = new Neuron[neuronCount];
+        _neurons = new Neuron[neuronCount];
         for (int i = 0; i < neuronCount; i++) {
-            neurons[i] = new Neuron(inputCount);
+            _neurons[i] = new Neuron(inputCount);
         }
     }
 
@@ -60,64 +61,61 @@ public class Layer implements Processor
 
     public Layer (Neuron[] neurons, Function thresholdFunction)
     {
-        this.function = thresholdFunction;
-
-        this.neurons = neurons;
+        _neurons = neurons;
+        _function = thresholdFunction;
 
         int inputCount = neurons[0].getWeightCount();
 
         // create arrays to store the most recent inputs and
         // outputs for this network
-        inputs = new double[inputCount];
-        outputs = new double[neurons.length];
-
+        _inputs = new double[inputCount];
+        _outputs = new double[neurons.length];
     }
 
     @Override
     public double[] process (double[] inputValues)
     {
         // save copy of input values
-        ArrayUtils.copyInto(inputValues, inputs);
+        ArrayUtils.copyInto(inputValues, _inputs);
 
-        for (int i = 0; i < neurons.length; i++) {
+        for (int i = 0; i < _neurons.length; i++) {
 
             // Get the weighted sum of the input values and
             // run this stimulation through the squashing function.
             // Set the result as the output values for the neuron
             // at this index.
-            outputs[i] = neurons[i].process(inputs, function);
+            _outputs[i] = _neurons[i].process(_inputs, _function);
 
         }
 
         // return a copy of the outputs so that
         // no one can mess with our internal output values
-        return ArrayUtils.copy(outputs);
-
+        return ArrayUtils.copy(_outputs);
     }
 
-    public void setFunction (Function newFunction)
+    public void setFunction (Function thresholdFunction)
     {
-        function = newFunction;
+        _function = thresholdFunction;
     }
 
     public Function getFunction ()
     {
-        return function;
+        return _function;
     }
 
     public int getNeuronCount ()
     {
-        return neurons.length;
+        return _neurons.length;
     }
 
     public Neuron getNeuron (int neuronIndex)
     {
-        return neurons[neuronIndex];
+        return _neurons[neuronIndex];
     }
 
     public double getWeight (int neuronIndex, int inputIndex)
     {
-        return neurons[neuronIndex].getWeight(inputIndex);
+        return _neurons[neuronIndex].getWeight(inputIndex);
     }
 
     public double[] backup (double[] errors, double learningRate)
@@ -127,13 +125,12 @@ public class Layer implements Processor
 
     public double[] backup (double[] errors, double learningRate, double momentum)
     {
-
         int neuronCount = getNeuronCount();
 
         double[] deltas = new double[neuronCount];
 
         // calculate the errors for the upstream layer
-        double[] upstreamErrors = new double[inputs.length];
+        double[] upstreamErrors = new double[_inputs.length];
 
         for (int neuronIndex = 0; neuronIndex < neuronCount; neuronIndex++) {
 
@@ -141,58 +138,51 @@ public class Layer implements Processor
             // at the point of the current output value
             double outputSlope = 1;
 
-            if (function instanceof Derivable) {
-                Derivable derivableFunction = (Derivable) function;
+            if (_function instanceof Derivable) {
+                Derivable derivableFunction = (Derivable) _function;
                 Function derivative = derivableFunction.getDerivative();
-                outputSlope = derivative.apply(outputs[neuronIndex]);
+                outputSlope = derivative.apply(_outputs[neuronIndex]);
             }
 
             // multiply the error value times the slope of the current output
             deltas[neuronIndex] = errors[neuronIndex] * outputSlope;
 
             // for each input value
-            for (int inputIndex = 0; inputIndex < inputs.length; inputIndex++) {
+            for (int inputIndex = 0; inputIndex < _inputs.length; inputIndex++) {
 
-                // - get the weight for the current input to
-                // the current neuron
+                // - get the weight for the current input to the current neuron
                 //
-                // - multiply the weight times the output
-                // error (aka delta) for the current neuron
-                //
+                // - multiply the weight times the output error (aka delta) for the current neuron
                 double weightedError = getWeight(neuronIndex, inputIndex) * deltas[neuronIndex];
 
-                // accumulate all of the weighted error values
-                // for the current input
+                // accumulate all of the weighted error values for the current input
                 upstreamErrors[inputIndex] += weightedError;
 
                 // Adjust weights for the current layer
-                double weightChange = learningRate * deltas[neuronIndex] * inputs[inputIndex];
+                double weightChange = learningRate * deltas[neuronIndex] * _inputs[inputIndex];
 
                 // Add momentum (if any) to the weight adjustment.
                 // This is the last weight change times the momentum factor.
                 double momentumWeightChange = momentum
-                    * neurons[neuronIndex].getMomentum(inputIndex);
+                    * _neurons[neuronIndex].getMomentum(inputIndex);
 
                 weightChange += momentumWeightChange;
 
-                neurons[neuronIndex].adjustWeight(inputIndex, weightChange);
+                _neurons[neuronIndex].adjustWeight(inputIndex, weightChange);
             }
-
         }
-
         return upstreamErrors;
     }
 
     public double[] getOutputs ()
     {
-        return outputs;
+        return _outputs;
     }
 
     public void randomize ()
     {
-        for (int i = 0; i < neurons.length; i++) {
-            neurons[i].randomize();
+        for (int i = 0; i < _neurons.length; i++) {
+            _neurons[i].randomize();
         }
     }
-
 }

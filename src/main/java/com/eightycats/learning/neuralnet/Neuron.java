@@ -19,7 +19,7 @@ import com.eightycats.math.util.ArrayUtils;
 import com.eightycats.math.util.RandomUtils;
 
 /**
- *
+ * Maintains a set of weights for each input and applies those to determine a single output signal.
  */
 public class Neuron
 {
@@ -126,7 +126,6 @@ public class Neuron
      */
     public double getStimulation (double[] inputs)
     {
-
         double stimulation = 0.0;
 
         for (int i = 0; i < inputs.length; i++) {
@@ -134,7 +133,6 @@ public class Neuron
         }
 
         return stimulation;
-
     }
 
     public double process (double[] inputs, Function function)
@@ -146,7 +144,6 @@ public class Neuron
         // and set it as the output values for the neuron
         // at this index
         return function.apply(stimulation);
-
     }
 
     @Override
@@ -154,5 +151,4 @@ public class Neuron
     {
         return ArrayUtils.toString(weights);
     }
-
 }

@@ -19,12 +19,13 @@ import com.eightycats.learning.reinforcement.ActionValueFunction;
 import com.eightycats.learning.reinforcement.State;
 
 /**
- *
- *
+ * An Action selection Policy that usually chooses the Action that the value function currently
+ * thinks is most value, but some percentage of the time, epsilon, it chooses a random, exploratoty
+ * Action.
  */
 public class EGreedyActionPolicy extends EGreedyPolicyBase
 {
-    private ActionValueFunction valueFunction;
+    protected ActionValueFunction _valueFunction;
 
     /**
      * @param epsilon percentage of how often this policy should choose an exploratory action
@@ -33,13 +34,12 @@ public class EGreedyActionPolicy extends EGreedyPolicyBase
     public EGreedyActionPolicy (double epsilon, ActionValueFunction valueFunction)
     {
         super(epsilon);
-        this.valueFunction = valueFunction;
+        _valueFunction = valueFunction;
     }
 
     @Override
     protected double getValue (State currentState, Action action)
     {
-        return valueFunction.getValue(currentState, action);
+        return _valueFunction.getValue(currentState, action);
     }
-
 }

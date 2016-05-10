@@ -14,18 +14,15 @@
 
 package com.eightycats.learning.reinforcement.policy;
 
-import java.util.Random;
-
 import com.eightycats.learning.reinforcement.Action;
 import com.eightycats.learning.reinforcement.State;
+import com.eightycats.math.util.RandomUtils;
 
 /**
  * This policy selects a possible action at random.
  */
 public class RandomPolicy
 {
-    protected static Random random = new Random();
-
     public Action selectAction (State state)
     {
         Action[] actions = state.getActions();
@@ -34,6 +31,6 @@ public class RandomPolicy
 
     public static Action selectAction (Action[] actions)
     {
-        return actions[random.nextInt(actions.length)];
+        return actions[RandomUtils.getRandom().nextInt(actions.length)];
     }
 }

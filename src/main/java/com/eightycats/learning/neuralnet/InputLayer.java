@@ -14,7 +14,6 @@
 
 package com.eightycats.learning.neuralnet;
 
-
 /**
  * A stateful input layer. It maintains a copy of the latest input values that it was
  * passed. This input layer is biased, meaning that the value of the output at index 0 will always

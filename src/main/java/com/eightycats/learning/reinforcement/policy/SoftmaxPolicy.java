@@ -19,7 +19,6 @@ import com.eightycats.learning.reinforcement.*;
 
 public class SoftmaxPolicy
 {
-
    private ValueFunction valueFunction;
 
    private double temperature;
@@ -38,7 +37,6 @@ public class SoftmaxPolicy
 
    public Action selectAction( State state )
    {
-
        Action[] actions = state.getActions();
 
        double total = 0;
