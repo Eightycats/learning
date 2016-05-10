@@ -176,7 +176,6 @@ public class Layer implements Processor
                 weightChange += momentumWeightChange;
 
                 neurons[neuronIndex].adjustWeight(inputIndex, weightChange);
-
             }
 
         }
