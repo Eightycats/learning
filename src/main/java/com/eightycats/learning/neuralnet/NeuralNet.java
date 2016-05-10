@@ -20,6 +20,8 @@ import java.io.PrintStream;
 import com.eightycats.learning.neuralnet.io.NeuralNetTextWriter;
 import com.eightycats.math.functions.Function;
 import com.eightycats.math.functions.Processor;
+import com.eightycats.math.normalization.Normalizer;
+import com.eightycats.math.normalization.PassthroughNormalization;
 import com.eightycats.math.util.ArrayUtils;
 
 /**
@@ -37,6 +39,11 @@ public class NeuralNet
     protected double _learningRateDecay = 0.0;
 
     protected double _momentum = 0.0;
+
+    /**
+     * Applied to the inputs to optionally keep them within a certain range.
+     */
+    protected Normalizer _normalizer = new PassthroughNormalization();
 
     /**
      * Creates a network with one hidden layer.
@@ -92,11 +99,9 @@ public class NeuralNet
     @Override
     public double[] process (double[] inputs)
     {
-        _inputLayer.setInputs(inputs);
+        _inputLayer.setInputs(_normalizer.normalize(inputs));
 
-        // the input layer adds a bias value,
-        // which is why we don't just pass the
-        // inputs directly
+        // the input layer adds a bias value, which is why we don't just pass the inputs directly
         double[] output = _inputLayer.getOutputs();
 
         for (int i = 0; i < _layers.length; i++) {
@@ -207,6 +212,14 @@ public class NeuralNet
     public InputLayer getInputLayer ()
     {
         return _inputLayer;
+    }
+
+    /**
+     * Sets a normalizer to apply to the inputs. To keep them within a certain range, for example.
+     */
+    public void setNormalizer (Normalizer normalizer)
+    {
+        _normalizer = normalizer;
     }
 
     @Override
