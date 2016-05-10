@@ -12,13 +12,14 @@
  * the License.
  */
 
-package com.eightycats.learning.neuralnet.test;
+package com.eightycats.learning.test.neuralnet;
 
 /**
  * Trains a neural net against the values of a Sine wave plus 1 (all positive).
  */
 public class SineTestPlusOne extends SineTest
 {
+    @Override
     public double function (double x)
     {
         return (Math.sin(x) + 1) / 2;

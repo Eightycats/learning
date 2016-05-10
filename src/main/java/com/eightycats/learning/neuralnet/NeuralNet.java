@@ -170,14 +170,14 @@ public class NeuralNet
         return _learningRateDecay;
     }
 
-    public double getMomentum ()
-    {
-        return _momentum;
-    }
-
     public void setLearningRateDecay (double learningRateDecay)
     {
         _learningRateDecay = learningRateDecay;
+    }
+
+    public double getMomentum ()
+    {
+        return _momentum;
     }
 
     public void setMomentum (double momentum)

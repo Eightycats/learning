@@ -12,15 +12,16 @@
  * the License.
  */
 
-package com.eightycats.learning.test;
+package com.eightycats.learning.test.neuralnet;
 
 import java.util.Random;
 
-import com.eightycats.math.IncrementalAverage;
-import com.eightycats.math.normalization.Normalizer;
 import com.eightycats.learning.neuralnet.InputSource;
 import com.eightycats.learning.neuralnet.NeuralNet;
 import com.eightycats.learning.neuralnet.train.TrainingHarness;
+import com.eightycats.math.average.IncrementalAverage;
+import com.eightycats.math.normalization.Normalizer;
+import com.eightycats.math.normalization.RangeBasedNormalization;
 
 /**
  * Trains a neural net against a sine wave.
@@ -31,6 +32,7 @@ public class SineTest extends TestBase
 
     private static Random random = new Random();
 
+    @Override
     public double[] process (double[] input)
     {
         double[] result = new double[1];
@@ -43,20 +45,24 @@ public class SineTest extends TestBase
         return Math.sin(x) / 2;
     }
 
+    @Override
     public double[] normalize (double[] input)
     {
         return new double[] { normalize(input[0]) };
     }
 
+    @Override
     public double normalize (double input)
     {
         return input / (2 * Math.PI);
     }
 
+    @Override
     public void reset ()
     {
     }
 
+    @Override
     public double[] nextInput ()
     {
         double[] inputs = new double[1];
@@ -64,6 +70,7 @@ public class SineTest extends TestBase
         return inputs;
     }
 
+    @Override
     public boolean hasMoreInputs ()
     {
         return true;
@@ -81,6 +88,8 @@ public class SineTest extends TestBase
 
             System.out.println("\n\nTraining complete.\n\n");
 
+            System.out.println("Degrees, Network Output, Actual Value, Error, Avg. Error");
+
             double sampleCount = 100;
             double twoPI = 2 * Math.PI;
             double increment = twoPI / sampleCount;
@@ -88,7 +97,6 @@ public class SineTest extends TestBase
             IncrementalAverage average = new IncrementalAverage();
 
             double[] inputs = new double[1];
-
             for (double i = 0; i <= twoPI; i += increment) {
 
                 inputs[0] = i;
@@ -113,7 +121,6 @@ public class SineTest extends TestBase
                 average.add(error);
 
                 System.out.println(average.getAverage());
-
             }
 
         } catch (Throwable ex) {

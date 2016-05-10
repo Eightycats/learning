@@ -12,17 +12,19 @@
  * the License.
  */
 
-package com.eightycats.learning.neuralnet.test;
+package com.eightycats.learning.test.neuralnet;
 
-import com.eightycats.learning.neuralnet.*;
-import com.eightycats.learning.neuralnet.train.*;
-import com.eightycats.math.Processor;
+import com.eightycats.learning.neuralnet.InputSource;
+import com.eightycats.learning.neuralnet.NeuralNet;
+import com.eightycats.learning.neuralnet.train.TrainingHarness;
+import com.eightycats.math.functions.Processor;
 import com.eightycats.math.functions.Tanh;
 
 /**
  * Base class for setting up a neural network and a test harness to train it.
  */
-public abstract class TestBase implements Processor
+public abstract class TestBase
+    implements Processor
 {
     public NeuralNet train (int inputCount, int hiddenCount, int outputCount, double learningRate,
         double learningRateDecay, double momentum, InputSource trainingInput, int trainingRounds)

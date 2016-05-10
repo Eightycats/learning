@@ -12,17 +12,12 @@
  * the License.
  */
 
-package com.eightycats.learning.neuralnet.test;
+package com.eightycats.learning.test.neuralnet;
 
 import com.eightycats.learning.neuralnet.NeuralNet;
-import com.eightycats.math.average.IncrementalAverage;
 import com.eightycats.math.functions.Tanh;
 import com.eightycats.math.util.VectorMath;
 
-/**
- *
- *
- */
 public class PositiveNegativeTest
 {
 
@@ -85,7 +80,6 @@ public class PositiveNegativeTest
                 System.out.println("Error magnitude: " + VectorMath.vectorLength(errorValues));
 
                 System.out.println("Learning Rate: " + network.getLearningRate());
-
             }
 
             network.setLearningRateDecay(.0001);
@@ -135,17 +129,13 @@ public class PositiveNegativeTest
                 System.out.println("Error magnitude: " + VectorMath.vectorLength(errorValues));
 
                 System.out.println("Learning Rate: " + network.getLearningRate());
-
             }
 
             System.out.println("\n\nTraining complete.\n\n");
 
-            double sampleCount = 100;
             double range = 2.0;
             double increment = .02;
             range -= 1.0;
-
-            IncrementalAverage average = new IncrementalAverage();
 
             for (double i = -1.0; i <= range; i += increment) {
 
@@ -158,7 +148,6 @@ public class PositiveNegativeTest
 
                 System.out.print(output[0]);
                 System.out.println();
-
             }
 
         } catch (Throwable ex) {

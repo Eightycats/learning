@@ -12,19 +12,21 @@
  * the License.
  */
 
-package com.eightycats.learning.neuralnet.test;
+package com.eightycats.learning.test.neuralnet;
 
-import com.eightycats.learning.neuralnet.*;
-import com.eightycats.math.*;
+import com.eightycats.learning.neuralnet.InputSource;
+import com.eightycats.learning.neuralnet.NeuralNet;
+import com.eightycats.math.util.ArrayUtils;
 
 /**
- *
+ * Trains a neural net on the xor function.
  */
 public class XORTest extends TestBase
     implements InputSource
 {
     private int inputCounter = 0;
 
+    @Override
     public double[] process (double[] input)
     {
         double[] result = new double[1];
