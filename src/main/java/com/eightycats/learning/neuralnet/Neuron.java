@@ -29,7 +29,7 @@ public class Neuron
     protected double[] weights;
 
     /**
-     * The most recent weight adjustments. These values are used in calulating momentum when
+     * The most recent weight adjustments. These values are used in calculating momentum when
      * training a network.
      */
     protected double[] momentum;
