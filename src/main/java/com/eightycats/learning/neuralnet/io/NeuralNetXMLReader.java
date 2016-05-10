@@ -38,34 +38,33 @@ import com.eightycats.math.functions.Function;
 /**
  * This is a utility class for reading a NeuralNet instance from XML.
  */
-public class NeuralNetXMLReader extends XMLHandlerBase implements NeuralNetReader
+public class NeuralNetXMLReader extends XMLHandlerBase
+    implements NeuralNetReader
 {
+    protected InputLayer _inputLayer;
 
-    private InputLayer inputLayer;
+    protected List<Layer> _layers = new ArrayList<Layer>();
 
-    private List<Layer> layers = new ArrayList<Layer>();
+    protected Function _currentFunction = null;
 
-    private Function currentFunction = null;
+    protected List<Neuron> _currentLayerNeurons = new ArrayList<Neuron>();
 
-    private List<Neuron> currentLayerNeurons = new ArrayList<Neuron>();
-
-    private List<Neuron> currentNeuronWeights = new ArrayList<Neuron>();
+    protected List<Double> _currentNeuronWeights = new ArrayList<Double>();
 
     public void reset ()
     {
-        inputLayer = null;
-        currentLayerNeurons.clear();
-        currentNeuronWeights.clear();
-        currentFunction = null;
-        layers.clear();
+        _inputLayer = null;
+        _currentLayerNeurons.clear();
+        _currentNeuronWeights.clear();
+        _currentFunction = null;
+        _layers.clear();
     }
 
-    public NeuralNet readNetwork (String xmlFilePath) throws Exception
+    public NeuralNet readNetwork (String xmlFilePath)
+        throws Exception
     {
         NeuralNet network = null;
-
         FileReader file = new FileReader(xmlFilePath);
-
         try {
             BufferedReader reader = new BufferedReader(file);
             network = readNetwork(reader);
@@ -77,19 +76,18 @@ public class NeuralNetXMLReader extends XMLHandlerBase implements NeuralNetReade
                     + "] while reading neural network from XML.");
             }
         }
-
         return network;
-
     }
 
-    public static NeuralNet readNetwork (Reader input) throws Exception
+    public static NeuralNet readNetwork (Reader input)
+        throws Exception
     {
-        NeuralNetXMLReader parser = new NeuralNetXMLReader();
-        return parser.read(input);
+        return new NeuralNetXMLReader().read(input);
     }
 
     @Override
-    public NeuralNet read (Reader xmlInput) throws Exception
+    public NeuralNet read (Reader xmlInput)
+        throws Exception
     {
         // make sure to clear out any previously parsed info
         reset();
@@ -101,11 +99,10 @@ public class NeuralNetXMLReader extends XMLHandlerBase implements NeuralNetReade
         parser.parse(xmlSource, this);
 
         // create new network and return it
-        Layer[] layerArray = new Layer[layers.size()];
-        layerArray = layers.toArray(layerArray);
+        Layer[] layerArray = new Layer[_layers.size()];
+        layerArray = _layers.toArray(layerArray);
 
-        return new NeuralNet(inputLayer, layerArray);
-
+        return new NeuralNet(_inputLayer, layerArray);
     }
 
     @Override
@@ -122,17 +119,27 @@ public class NeuralNetXMLReader extends XMLHandlerBase implements NeuralNetReade
             String biasValue = attributes.getValue(NeuralNetXMLConstants.BIAS);
             double bias = Double.parseDouble(biasValue);
 
-            inputLayer = new InputLayer(count);
-            inputLayer.setBias(bias);
+            _inputLayer = new InputLayer(count);
+            _inputLayer.setBias(bias);
 
         } else if (qName.equals(NeuralNetXMLConstants.LAYER)) {
 
-            // TODO: create function
-
+            // create function
+            String functionClassName = attributes.getValue(NeuralNetXMLConstants.FUNCTION);
+            try {
+                Class<?> functionClass = Class.forName(functionClassName);
+                // no class cast check here
+                _currentFunction = (Function) functionClass.newInstance();
+            } catch (ClassNotFoundException ex) {
+                Logger.error("Could not find function class: " + functionClassName);
+                throw new SAXException(ex);
+            } catch (Exception ex) {
+                Logger.error("Could not instantiate function class: " + functionClassName);
+                throw new SAXException(ex);
+            }
         }
 
         // TODO: read weights
-
     }
 
     @Override
@@ -141,14 +148,20 @@ public class NeuralNetXMLReader extends XMLHandlerBase implements NeuralNetReade
         super.endElement(uri, localName, qName);
 
         if (qName.equals(NeuralNetXMLConstants.LAYER)) {
-            Neuron[] neurons = new Neuron[currentLayerNeurons.size()];
-            neurons = currentLayerNeurons.toArray(neurons);
+            Neuron[] neurons = new Neuron[_currentLayerNeurons.size()];
+            neurons = _currentLayerNeurons.toArray(neurons);
+            _layers.add(new Layer(neurons, _currentFunction));
+            _currentLayerNeurons.clear();
+            _currentFunction = null;
 
-            Layer layer = new Layer(neurons, currentFunction);
-            layers.add(layer);
-
-            currentLayerNeurons.clear();
-            currentFunction = null;
+        } else if (qName.equals(NeuralNetXMLConstants.NEURON)) {
+            int weightCount = _currentNeuronWeights.size();
+            double[] weights = new double[weightCount];
+            for (int i = 0; i < weightCount; i++) {
+                weights[i] = _currentNeuronWeights.get(i);
+            }
+            _currentLayerNeurons.add(new Neuron(weights));
+            _currentNeuronWeights.clear();
         }
 
     }
@@ -156,8 +169,18 @@ public class NeuralNetXMLReader extends XMLHandlerBase implements NeuralNetReade
     @Override
     protected void textField (String tagName, String text)
     {
-        // java.util.Arrays.
-
+        if (NeuralNetXMLConstants.WEIGHT.equals(tagName)) {
+            _currentNeuronWeights.add(Double.valueOf(text.trim()));
+        }
     }
 
+    public static void main (String[] args)
+    {
+        try {
+            NeuralNet network = new NeuralNetXMLReader().readNetwork(args[0]);
+            NeuralNetTextWriter.print(network);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 }

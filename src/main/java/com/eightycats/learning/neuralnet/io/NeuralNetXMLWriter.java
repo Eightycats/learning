@@ -29,14 +29,13 @@ import com.eightycats.litterbox.xml.dom.DocumentParser;
 import com.eightycats.math.functions.Tanh;
 
 /**
- *
- *
- *
+ * Writes out the contents of a NeuralNet as XML.
  */
 public class NeuralNetXMLWriter
     implements NeuralNetWriter
 {
-    public static void writeNetwork (NeuralNet network, PrintStream output) throws Exception
+    public static void writeNetwork (NeuralNet network, PrintStream output)
+        throws Exception
     {
         Document document = DocumentParser.createDocument(NeuralNetXMLConstants.NETWORK);
 
@@ -66,7 +65,6 @@ public class NeuralNetXMLWriter
 
             int neuronCount = layer.getNeuronCount();
             for (int j = 0; j < neuronCount; j++) {
-
                 Node neuronNode = generator.addChild(layerNode, NeuralNetXMLConstants.NEURON);
 
                 Neuron neuron = layer.getNeuron(j);
@@ -75,18 +73,16 @@ public class NeuralNetXMLWriter
                     Node weightNode = generator.addChild(neuronNode, NeuralNetXMLConstants.WEIGHT);
                     DocumentAccessor.setText(weightNode, Double.toString(neuron.getWeight(k)));
                 }
-
             }
 
         }
-
         output.println(generator.generate());
-
         output.flush();
     }
 
     @Override
-    public void write (NeuralNet network, PrintStream output) throws Exception
+    public void write (NeuralNet network, PrintStream output)
+        throws Exception
     {
         writeNetwork(network, output);
     }
@@ -96,7 +92,6 @@ public class NeuralNetXMLWriter
         NeuralNet network = new NeuralNet(3, 5, 3, 1);
         network.setFunction(Tanh.getInstance());
         network.randomize();
-
         try {
             NeuralNetXMLWriter.writeNetwork(network, System.out);
         } catch (Exception ex) {
