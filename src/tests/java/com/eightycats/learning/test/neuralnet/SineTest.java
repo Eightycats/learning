@@ -21,7 +21,6 @@ import com.eightycats.learning.neuralnet.NeuralNet;
 import com.eightycats.learning.neuralnet.train.TrainingHarness;
 import com.eightycats.math.average.IncrementalAverage;
 import com.eightycats.math.normalization.Normalizer;
-import com.eightycats.math.normalization.RangeBasedNormalization;
 
 /**
  * Trains a neural net against a sine wave.
