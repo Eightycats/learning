@@ -29,12 +29,12 @@ public class InputLayer
 
     public InputLayer (int inputCount)
     {
-        _outputs = new double[inputCount + 1];
+        this(new double[inputCount]);
     }
 
     public InputLayer (double[] inputs)
     {
-        this(inputs.length);
+        _outputs = new double[inputs.length + 1];
         setInputs(inputs);
         // Use a bias input value of 1 by default
         setBias(1.0);
