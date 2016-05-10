@@ -22,24 +22,24 @@ import com.eightycats.learning.reinforcement.State;
  */
 public class StateActionPair
 {
-    private State state;
+    protected State _state;
 
-    private Action action;
+    protected Action _action;
 
     public StateActionPair (State state, Action action)
     {
-        this.state = state;
-        this.action = action;
+        _state = state;
+        _action= action;
     }
 
     public State getState ()
     {
-        return state;
+        return _state;
     }
 
     public Action getAction ()
     {
-        return action;
+        return _action;
     }
 
     @Override
@@ -48,7 +48,7 @@ public class StateActionPair
         boolean equals = false;
         if (object instanceof StateActionPair) {
             StateActionPair other = (StateActionPair) object;
-            equals = state.equals(other.state) && action.equals(other.action);
+            equals = _state.equals(other._state) && _action.equals(other._action);
         }
         return equals;
     }
@@ -59,12 +59,12 @@ public class StateActionPair
     @Override
     public int hashCode ()
     {
-        return state.hashCode() + action.hashCode();
+        return _state.hashCode() + _action.hashCode();
     }
 
     @Override
     public String toString ()
     {
-        return "(" + state.toString() + ", " + action.toString() + ")";
+        return "[" + _state.toString() + ", " + _action.toString() + "]";
     }
 }

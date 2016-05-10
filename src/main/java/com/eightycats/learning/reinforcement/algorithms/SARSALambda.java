@@ -33,18 +33,18 @@ public class SARSALambda extends ActionEpisode
     /**
      * The collection of previous states-action pairs that are eligible for update.
      */
-    protected ActionEligibilityTrace trace;
+    protected ActionEligibilityTrace _trace;
 
     public SARSALambda (State initialState, Policy policy, ActionValueFunction valueFunction,
         RewardFunction rewardFunction, EligibilityConfig config)
     {
         super(initialState, policy, valueFunction, rewardFunction);
-        trace = new ActionEligibilityTrace(config);
+        _trace = new ActionEligibilityTrace(config);
     }
 
     public void reset ()
     {
-        trace.clear();
+        _trace.clear();
     }
 
     @Override
@@ -75,15 +75,15 @@ public class SARSALambda extends ActionEpisode
         Logger.debug("TD Error (sigma) : " + valueUpdate);
 
         // add the state to the eligibilty trace
-        trace.add(state, action);
+        _trace.add(state, action);
 
         // this should already get done in step() call
         // this.currentState = nextState;
 
         // update the value function for all eligible states
-        int eligibleCount = trace.getLength();
+        int eligibleCount = _trace.getLength();
 
-        Logger.debug("Trace:\n" + trace);
+        Logger.debug("Trace:\n" + _trace);
         Logger.debug("Trace length: " + eligibleCount);
 
         valueUpdate *= getLearningRate();
@@ -92,8 +92,8 @@ public class SARSALambda extends ActionEpisode
         for (int i = 0; i < eligibleCount; i++) {
             // calculate each particular state's update value
             // based on the state's eligibility and the learning rate
-            StateActionPair eligiblePair = trace.getStateActionPair(i);
-            double error = valueUpdate * trace.getEligibility(i);
+            StateActionPair eligiblePair = _trace.getStateActionPair(i);
+            double error = valueUpdate * _trace.getEligibility(i);
             Logger.debug("State-Action[" + i + "] :\n" + eligiblePair);
             Logger.debug("Error        : " + error);
             _valueFunction.update(eligiblePair.getState(), eligiblePair.getAction(), error);

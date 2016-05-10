@@ -20,7 +20,8 @@ import com.eightycats.learning.reinforcement.ValueFunction;
 /**
  * A wrapper around a value function that fires off events when the function values change.
  */
-public class ValueModel implements StateValueModel
+public class ValueModel
+    implements StateValueModel
 {
     protected ValueFunction _valueFunction;
 

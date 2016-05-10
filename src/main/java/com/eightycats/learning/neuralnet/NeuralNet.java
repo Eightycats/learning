@@ -25,17 +25,18 @@ import com.eightycats.math.util.ArrayUtils;
 /**
  * A simple backpropagation neural network.
  */
-public class NeuralNet implements Processor
+public class NeuralNet
+    implements Processor
 {
-    protected InputLayer inputLayer;
+    protected InputLayer _inputLayer;
 
-    protected Layer[] layers;
+    protected Layer[] _layers;
 
-    protected double learningRate = .1;
+    protected double _learningRate = .1;
 
-    protected double learningRateDecay = 0.0;
+    protected double _learningRateDecay = 0.0;
 
-    protected double momentum = 0.0;
+    protected double _momentum = 0.0;
 
     /**
      * Creates a network with one hidden layer.
@@ -46,10 +47,10 @@ public class NeuralNet implements Processor
      */
     public NeuralNet (int inputCount, int hiddenNeurons, int outputCount)
     {
-        inputLayer = new InputLayer(inputCount);
-        layers = new Layer[2];
-        layers[0] = new Layer(inputLayer.getOutputCount(), hiddenNeurons);
-        layers[1] = new Layer(hiddenNeurons, outputCount);
+        _inputLayer = new InputLayer(inputCount);
+        _layers = new Layer[2];
+        _layers[0] = new Layer(_inputLayer.getOutputCount(), hiddenNeurons);
+        _layers[1] = new Layer(hiddenNeurons, outputCount);
     }
 
     /**
@@ -62,17 +63,17 @@ public class NeuralNet implements Processor
      */
     public NeuralNet (int inputCount, int hiddenLayer1Count, int hiddenLayer2Count, int outputCount)
     {
-        inputLayer = new InputLayer(inputCount);
-        layers = new Layer[3];
-        layers[0] = new Layer(inputLayer.getOutputCount(), hiddenLayer1Count);
-        layers[1] = new Layer(hiddenLayer1Count, hiddenLayer2Count);
-        layers[2] = new Layer(hiddenLayer2Count, outputCount);
+        _inputLayer = new InputLayer(inputCount);
+        _layers = new Layer[3];
+        _layers[0] = new Layer(_inputLayer.getOutputCount(), hiddenLayer1Count);
+        _layers[1] = new Layer(hiddenLayer1Count, hiddenLayer2Count);
+        _layers[2] = new Layer(hiddenLayer2Count, outputCount);
     }
 
     public NeuralNet (InputLayer input, Layer[] layers)
     {
-        this.inputLayer = input;
-        this.layers = layers;
+        _inputLayer = input;
+        _layers = layers;
     }
 
     /**
@@ -80,8 +81,8 @@ public class NeuralNet implements Processor
      */
     public void setFunction (Function threshold)
     {
-        for (int i = 0; i < layers.length; i++) {
-            layers[i].setFunction(threshold);
+        for (int i = 0; i < _layers.length; i++) {
+            _layers[i].setFunction(threshold);
         }
     }
 
@@ -91,15 +92,15 @@ public class NeuralNet implements Processor
     @Override
     public double[] process (double[] inputs)
     {
-        inputLayer.setInputs(inputs);
+        _inputLayer.setInputs(inputs);
 
         // the input layer adds a bias value,
         // which is why we don't just pass the
         // inputs directly
-        double[] output = inputLayer.getOutputs();
+        double[] output = _inputLayer.getOutputs();
 
-        for (int i = 0; i < layers.length; i++) {
-            output = layers[i].process(output);
+        for (int i = 0; i < _layers.length; i++) {
+            output = _layers[i].process(output);
         }
 
         return output;
@@ -131,12 +132,12 @@ public class NeuralNet implements Processor
      */
     public void backup (double[] errors)
     {
-        for (int i = layers.length - 1; i >= 0; i--) {
-            errors = layers[i].backup(errors, learningRate, momentum);
+        for (int i = _layers.length - 1; i >= 0; i--) {
+            errors = _layers[i].backup(errors, _learningRate, _momentum);
         }
 
         // decay learning rate
-        learningRate -= (learningRate * learningRateDecay);
+        _learningRate -= (_learningRate * _learningRateDecay);
     }
 
     /**
@@ -146,37 +147,37 @@ public class NeuralNet implements Processor
     public double[] getOutputs ()
     {
         // get the values from the output (last) layer
-        return layers[layers.length - 1].getOutputs();
+        return _layers[_layers.length - 1].getOutputs();
     }
 
     public double getLearningRate ()
     {
-        return learningRate;
+        return _learningRate;
     }
 
     public void setLearningRate (double learningRate)
     {
-        this.learningRate = learningRate;
+        _learningRate = learningRate;
     }
 
     public double getLearningRateDecay ()
     {
-        return learningRateDecay;
+        return _learningRateDecay;
     }
 
     public double getMomentum ()
     {
-        return momentum;
+        return _momentum;
     }
 
     public void setLearningRateDecay (double learningRateDecay)
     {
-        this.learningRateDecay = learningRateDecay;
+        _learningRateDecay = learningRateDecay;
     }
 
     public void setMomentum (double momentum)
     {
-        this.momentum = momentum;
+        _momentum = momentum;
     }
 
     /**
@@ -184,8 +185,8 @@ public class NeuralNet implements Processor
      */
     public void randomize ()
     {
-        for (int i = 0; i < layers.length; i++) {
-            layers[i].randomize();
+        for (int i = 0; i < _layers.length; i++) {
+            _layers[i].randomize();
         }
     }
 
@@ -195,17 +196,17 @@ public class NeuralNet implements Processor
      */
     public int getLayerCount ()
     {
-        return layers.length;
+        return _layers.length;
     }
 
     public Layer getLayer (int layerIndex)
     {
-        return layers[layerIndex];
+        return _layers[layerIndex];
     }
 
     public InputLayer getInputLayer ()
     {
-        return inputLayer;
+        return _inputLayer;
     }
 
     @Override
@@ -213,10 +214,7 @@ public class NeuralNet implements Processor
     {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         PrintStream output = new PrintStream(buffer);
-
         NeuralNetTextWriter.writeNetwork(this, output);
-
         return new String(buffer.toByteArray());
     }
-
 }

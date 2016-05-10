@@ -21,7 +21,8 @@ import java.util.List;
  * This class represents a trace of visited states that are eligible for having their value updated
  * in the value function.
  */
-public class EligibilityTrace<S> implements EligibilityConstants
+public class EligibilityTrace<S>
+    implements EligibilityConstants
 {
     /**
      * Settings to use for this trace.
@@ -32,7 +33,6 @@ public class EligibilityTrace<S> implements EligibilityConstants
      * The list/trace of past states eligible for having their value updated.
      */
     protected List<S> _trace = new ArrayList<S>();
-
 
     public EligibilityTrace ()
     {

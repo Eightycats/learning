@@ -16,7 +16,8 @@ package com.eightycats.learning.reinforcement.util;
 
 import com.eightycats.learning.reinforcement.EpisodeConfig;
 
-public class EligibilityConfig extends EpisodeConfig implements EligibilityConstants
+public class EligibilityConfig extends EpisodeConfig
+    implements EligibilityConstants
 {
     protected double _lambda = DEFAULT_LAMBDA;
 

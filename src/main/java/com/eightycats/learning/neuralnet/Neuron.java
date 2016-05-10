@@ -26,45 +26,45 @@ public class Neuron
     /**
      * The input weights. inputs[n] is multiplied by weights[n] to get the weighted input value.
      */
-    protected double[] weights;
+    protected double[] _weights;
 
     /**
      * The most recent weight adjustments. These values are used in calculating momentum when
      * training a network.
      */
-    protected double[] momentum;
+    protected double[] _momentum;
 
     public Neuron (int weightCount)
     {
-        weights = new double[weightCount];
-        momentum = new double[weightCount];
+        _weights = new double[weightCount];
+        _momentum = new double[weightCount];
         randomize();
     }
 
     public Neuron (double[] weights)
     {
-        this.weights = ArrayUtils.copy(weights);
-        momentum = new double[weights.length];
+        _weights = ArrayUtils.copy(weights);
+        _momentum = new double[weights.length];
     }
 
     public int getWeightCount ()
     {
-        return weights.length;
+        return _weights.length;
     }
 
     public void setWeight (int weightIndex, double weight)
     {
-        weights[weightIndex] = weight;
+        _weights[weightIndex] = weight;
     }
 
     public double getWeight (int weightIndex)
     {
-        return weights[weightIndex];
+        return _weights[weightIndex];
     }
 
     public double getMomentum (int weightIndex)
     {
-        return momentum[weightIndex];
+        return _momentum[weightIndex];
     }
 
     /**
@@ -93,7 +93,7 @@ public class Neuron
         }
 
         // clear out the momentum array
-        ArrayUtils.zero(momentum);
+        ArrayUtils.zero(_momentum);
     }
 
     /**
@@ -101,7 +101,7 @@ public class Neuron
      */
     public void adjustWeight (int weightIndex, double weightChange)
     {
-        setWeight(weightIndex, weights[weightIndex] + weightChange);
+        setWeight(weightIndex, _weights[weightIndex] + weightChange);
 
         if (Double.isNaN(getWeight(weightIndex))) {
             try {
@@ -112,7 +112,7 @@ public class Neuron
         }
 
         // TODO: is this the correct way to update the momentum?
-        momentum[weightIndex] = weightChange;
+        _momentum[weightIndex] = weightChange;
     }
 
     /**
@@ -129,7 +129,7 @@ public class Neuron
         double stimulation = 0.0;
 
         for (int i = 0; i < inputs.length; i++) {
-            stimulation += weights[i] * inputs[i];
+            stimulation += _weights[i] * inputs[i];
         }
 
         return stimulation;
@@ -149,6 +149,6 @@ public class Neuron
     @Override
     public String toString ()
     {
-        return ArrayUtils.toString(weights);
+        return ArrayUtils.toString(_weights);
     }
 }

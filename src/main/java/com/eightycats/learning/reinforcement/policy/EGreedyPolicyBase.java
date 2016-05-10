@@ -28,21 +28,20 @@ public abstract class EGreedyPolicyBase
     implements Policy
 {
     /**
-     * epsilon - This is the probability that an exploratory (non-greedy) action will be selected.
+     * The probability that an exploratory (non-greedy) action will be selected.
      */
-    protected double e;
+    protected double _epsilon;
 
     /**
      * This is the amount by which the epsilon value will decay after each selectAction() call.
      */
-    protected double decay = 0.0;
+    protected double _decay = 0.0;
 
-    protected RandomPolicy randomPolicy;
+    protected RandomPolicy _randomPolicy = new RandomPolicy();
 
     public EGreedyPolicyBase (double epsilon)
     {
         setEpsilon(epsilon);
-        randomPolicy = new RandomPolicy();
     }
 
     @Override
@@ -50,26 +49,25 @@ public abstract class EGreedyPolicyBase
     {
         double selection = RandomUtils.random();
 
-        if (e > 0.0) {
+        if (_epsilon > 0.0) {
             // Decay the epsilon value.
             // If the decay is 0, this obviously has no effect.
-            e -= decay;
+            _epsilon -= _decay;
         }
 
         Action action = null;
 
-        if (selection >= e) {
+        if (selection >= _epsilon) {
             action = selectGreedyAction(state);
         }
 
         // if the e value indicates that we should choose a random action,
         // or if there was no greedy action
         if (action == null) {
-            action = randomPolicy.selectAction(state);
+            action = _randomPolicy.selectAction(state);
         }
 
         return action;
-
     }
 
     public Action selectGreedyAction (State currentState)
@@ -87,8 +85,7 @@ public abstract class EGreedyPolicyBase
                 max = actionValue;
                 bestAction = actions[i];
             } else if (actionValue == max) {
-                // randomly select from between two
-                // actions of equal value
+                // randomly select from between two actions of equal value
                 Action[] equalActions = new Action[] { bestAction, actions[i] };
                 bestAction = RandomPolicy.selectAction(equalActions);
             }
@@ -102,17 +99,15 @@ public abstract class EGreedyPolicyBase
      * This sets the amount that epsilon will decay after each call to selectAction(). This should
      * be a very small number. As epsilon gets smaller, this policy will select greedy actions more
      * often and explore less.
-     *
-     * @param decay
      */
     public void setDecay (double decay)
     {
-        this.decay = decay;
+        _decay = decay;
     }
 
     public double getDecay ()
     {
-        return decay;
+        return _decay;
     }
 
     /**
@@ -120,15 +115,14 @@ public abstract class EGreedyPolicyBase
      */
     public double getEpsilon ()
     {
-        return e;
+        return _epsilon;
     }
 
     /**
      * This sets the probability that an exploratory (non-greedy) action will be selected. The
      * epsilon value must be between 0.0 and 1.0.
      *
-     * @param epsilon
-     *            the probability of a selection a non-greedy action.
+     * @param epsilon the probability of a selection a non-greedy action.
      */
     public void setEpsilon (double epsilon)
     {
@@ -136,8 +130,6 @@ public abstract class EGreedyPolicyBase
             throw new IllegalArgumentException("The epsilon value [" + epsilon
                 + "] must be between 0.0 and 1.0.");
         }
-
-        this.e = epsilon;
+        _epsilon = epsilon;
     }
-
 }
