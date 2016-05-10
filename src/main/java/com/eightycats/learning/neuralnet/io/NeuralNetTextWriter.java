@@ -56,7 +56,7 @@ public class NeuralNetTextWriter implements NeuralNetWriter
         for (int i = 0; i < layerCount; i++) {
             output.println("Layer [" + i + "]:");
             Layer layer = network.getLayer(i);
-
+            output.println("Function: " + layer.getFunction().getClass().getName());
             int neuronCount = layer.getNeuronCount();
             for (int j = 0; j < neuronCount; j++) {
                 output.println("Neuron [" + j + "]:");
